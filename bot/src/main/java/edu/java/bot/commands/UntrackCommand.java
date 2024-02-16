@@ -3,19 +3,17 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.models.SessionState;
 import edu.java.bot.models.User;
+import edu.java.bot.services.UserService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import static edu.java.bot.services.UserService.changeSessionState;
-import static edu.java.bot.services.UserService.findById;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
-public final class UntrackCommand implements Command {
-    static final String UNTRACK_MESSAGE =
-        "Отправьте ссылку для прекращения отслеживания";
-    static final String UNKNOWN_USER_MESSAGE =
-        "Вы не зарегистрированы в LinkTracker'е";
-    static final String EMPTY_LIST_MESSAGE =
-        "Список отслеживаемых ссылок пустой";
+@Component
+@AllArgsConstructor
+public class UntrackCommand implements Command {
+    private final UserService userService;
 
     @Override
     public String command() {
@@ -35,7 +33,7 @@ public final class UntrackCommand implements Command {
     }
 
     private String createText(long chatId) {
-        Optional<User> initiator = findById(chatId);
+        Optional<User> initiator = userService.findById(chatId);
 
         if (initiator.isPresent()) {
             List<URI> links = initiator.get().getLinks();
@@ -45,10 +43,17 @@ public final class UntrackCommand implements Command {
             }
         }
 
-        if (changeSessionState(chatId, SessionState.WAITING_LINK_FOR_UNTRACKING)) {
+        if (userService.changeSessionState(chatId, SessionState.WAITING_LINK_FOR_UNTRACKING)) {
             return UNTRACK_MESSAGE;
         }
 
         return UNKNOWN_USER_MESSAGE;
     }
+
+    static final String UNTRACK_MESSAGE =
+        "Отправьте ссылку для прекращения отслеживания";
+    static final String UNKNOWN_USER_MESSAGE =
+        "Вы не зарегистрированы в LinkTracker'е";
+    static final String EMPTY_LIST_MESSAGE =
+        "Список отслеживаемых ссылок пустой";
 }

@@ -2,18 +2,17 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.models.User;
+import edu.java.bot.services.UserService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import static edu.java.bot.services.UserService.findById;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
-public final class ListCommand implements Command {
-    static final String EMPTY_LIST_MESSAGE =
-        "Список отслеживаемых ссылок пустой";
-    static final String UNKNOWN_USER_MESSAGE =
-        "Вы не зарегистрированы в LinkTracker'е";
-    static final String LIST_MESSAGE =
-        "LinkTracker отслеживает следующие ссылки:" + System.lineSeparator();
+@Component
+@AllArgsConstructor
+public class ListCommand implements Command {
+    private final UserService userService;
 
     @Override
     public String command() {
@@ -33,8 +32,11 @@ public final class ListCommand implements Command {
     }
 
     private String createText(long chatId) {
-        Optional<User> initiator = findById(chatId);
+        Optional<User> initiator = userService.findById(chatId);
 
+        // TODO
+        // https://ducmanhphan.github.io/2019-12-06-Best-practice-for-Optional-in-Java/#using-ifpresent()-or-ifPresentOrElse()-methods
+        // Не понял, как применить
         if (initiator.isPresent()) {
             List<URI> links = initiator.get().getLinks();
 
@@ -58,4 +60,11 @@ public final class ListCommand implements Command {
 
         return text.toString();
     }
+
+    static final String EMPTY_LIST_MESSAGE =
+        "Список отслеживаемых ссылок пустой";
+    static final String UNKNOWN_USER_MESSAGE =
+        "Вы не зарегистрированы в LinkTracker'е";
+    static final String LIST_MESSAGE =
+        "LinkTracker отслеживает следующие ссылки:" + System.lineSeparator();
 }

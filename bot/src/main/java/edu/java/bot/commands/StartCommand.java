@@ -1,13 +1,14 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import static edu.java.bot.services.UserService.register;
+import edu.java.bot.services.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
-public final class StartCommand implements Command {
-    static final String SUCCESSFUL_REGISTRATION_MESSAGE =
-        "Вы успешно зарегистрированы в LinkTracker'е!";
-    static final String ALREADY_REGISTERED_MESSAGE =
-        "Вы уже зарегистрированы в LinkTracker'е";
+@Component
+@AllArgsConstructor
+public class StartCommand implements Command {
+    private final UserService userService;
 
     @Override
     public String command() {
@@ -27,10 +28,15 @@ public final class StartCommand implements Command {
     }
 
     private String createText(long chatId) {
-        if (register(chatId)) {
+        if (userService.register(chatId)) {
             return SUCCESSFUL_REGISTRATION_MESSAGE;
         }
 
         return ALREADY_REGISTERED_MESSAGE;
     }
+
+    static final String SUCCESSFUL_REGISTRATION_MESSAGE =
+        "Вы успешно зарегистрированы в LinkTracker'е!";
+    static final String ALREADY_REGISTERED_MESSAGE =
+        "Вы уже зарегистрированы в LinkTracker'е";
 }

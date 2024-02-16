@@ -2,18 +2,13 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
-public final class HelpCommand implements Command {
-    static final String HELP_MESSAGE =
-        "Команды LinkTracker'а:" + System.lineSeparator();
-    private static final String COMMAND_DESCRIPTION_MESSAGE =
-        "%s — %s" + System.lineSeparator();
-
+@Component
+@AllArgsConstructor
+public class HelpCommand implements Command {
     private final List<Command> commands;
-
-    public HelpCommand(List<Command> commands) {
-        this.commands = commands;
-    }
 
     @Override
     public String command() {
@@ -43,4 +38,9 @@ public final class HelpCommand implements Command {
 
         return text.toString();
     }
+
+    static final String HELP_MESSAGE =
+        "Команды LinkTracker'а:" + System.lineSeparator();
+    static final String COMMAND_DESCRIPTION_MESSAGE =
+        "%s — %s" + System.lineSeparator();
 }
