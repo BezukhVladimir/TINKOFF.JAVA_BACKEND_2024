@@ -8,24 +8,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
-public final class UserService {
-    private UserService() {
+@Service
+public class UserService {
+    private final Map<Long, User> users = new HashMap<>();
+
+    public void clear() {
+        users.clear();
     }
 
-    private static final Map<Long, User> USERS = new HashMap<>();
-
-    public static void clear() {
-        USERS.clear();
+    public void addUser(User user) {
+        users.put(user.getChatId(), user);
     }
 
-    public static void addUser(User user) {
-        USERS.put(user.getChatId(), user);
-    }
-
-    public static Optional<User> findById(long chatId) {
-        return USERS.containsKey(chatId)
-            ? Optional.of(USERS.get(chatId))
+    public Optional<User> findById(long chatId) {
+        return users.containsKey(chatId)
+            ? Optional.of(users.get(chatId))
             : Optional.empty();
     }
 
@@ -36,7 +35,7 @@ public final class UserService {
      * @return {@code true} если пользователь успешно зарегистрирован,
      *         {@code false} если пользователь уже зарегистрирован
      */
-    public static boolean register(long chatId) {
+    public boolean register(long chatId) {
         Optional<User> initiator = findById(chatId);
 
         if (initiator.isEmpty()) {
@@ -56,7 +55,7 @@ public final class UserService {
      * @return {@code true} если состояние сессии изменено,
      *         {@code false} если пользователь не найден
      */
-    public static boolean changeSessionState(long chatId, SessionState newState) {
+    public boolean changeSessionState(long chatId, SessionState newState) {
         Optional<User> initiator = findById(chatId);
 
         if (initiator.isPresent()) {
@@ -78,7 +77,7 @@ public final class UserService {
      * @return {@code true} если ссылка добавлена,
      *         {@code false} если ссылка уже есть в списке
      */
-    public static boolean addLink(User user, URI uri) {
+    public boolean addLink(User user, URI uri) {
         List<URI> links = new ArrayList<>(user.getLinks());
 
         if (links.contains(uri)) {
@@ -99,7 +98,7 @@ public final class UserService {
      * @return {@code true} если ссылка удалена,
      *         {@code false} если ссылки не было в списке
      */
-    public static boolean deleteLink(User user, URI uri) {
+    public boolean deleteLink(User user, URI uri) {
         List<URI> links = new ArrayList<>(user.getLinks());
 
         if (!links.contains(uri)) {
@@ -112,7 +111,7 @@ public final class UserService {
         return true;
     }
 
-    private static void updateLinks(User user, List<URI> links) {
+    private void updateLinks(User user, List<URI> links) {
         user.setLinks(links);
         user.setState(SessionState.DEFAULT);
         addUser(user);
