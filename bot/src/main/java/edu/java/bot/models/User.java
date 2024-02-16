@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public final class User {
+public class User {
     private long chatId;
     private List<URI> links;
     private SessionState state;

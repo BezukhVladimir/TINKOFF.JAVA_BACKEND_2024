@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {BotApplication.class})
-final class MessageServiceTest {
+class MessageServiceTest {
     @MockBean
     Update update;
 
