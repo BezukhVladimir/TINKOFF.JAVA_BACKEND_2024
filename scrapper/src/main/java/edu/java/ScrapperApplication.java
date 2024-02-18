@@ -1,6 +1,6 @@
 package edu.java;
 
-import edu.java.configuration.ApplicationConfig;
+import edu.java.configurations.ApplicationConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
