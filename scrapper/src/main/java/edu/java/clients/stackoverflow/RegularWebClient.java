@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class RegularWebClient implements Client {
 
-    @Value(value = "api.stackoverflow.baseUrl")
+    @Value("${api.stackoverflow.baseUrl}")
     private String baseUrl;
 
     private final WebClient webClient;
