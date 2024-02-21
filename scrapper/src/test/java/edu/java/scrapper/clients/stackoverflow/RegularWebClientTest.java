@@ -8,12 +8,14 @@ import edu.java.dto.stackoverflow.Response;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.util.UriComponentsBuilder;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -75,11 +77,15 @@ public class RegularWebClientTest {
         Long expectedAnswerId = 77983233L;
         Long expectedQuestionId = 1732348L;
 
-        wireMockServer.stubFor(get(urlEqualTo(String.format("/questions/%d/answers"
-            + "?pagesize=1"
-            + "&order=desc"
-            + "&sort=activity"
-            + "&site=stackoverflow", questionId)))
+        var ucb = UriComponentsBuilder
+            .fromPath("/questions/{questionId}/answers")
+            .queryParam("pagesize", 1)
+            .queryParam("order", "desc")
+            .queryParam("sort", "activity")
+            .queryParam("site", "stackoverflow")
+            .uriVariables(Map.of("questionId", questionId));
+
+        wireMockServer.stubFor(get(urlEqualTo(ucb.toUriString()))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -92,10 +98,10 @@ public class RegularWebClientTest {
 
         // Assert
         assertThat(actualResponse).isNotNull();
-        assertThat(actualResponse.getOwner().getDisplayName()).isEqualTo(expectedOwnerDisplayName);
-        assertThat(actualResponse.getLastActivityDate()).isEqualTo(expectedLastActivityDate);
-        assertThat(actualResponse.getAnswerId()).isEqualTo(expectedAnswerId);
-        assertThat(actualResponse.getQuestionId()).isEqualTo(expectedQuestionId);
+        assertThat(actualResponse.owner().displayName()).isEqualTo(expectedOwnerDisplayName);
+        assertThat(actualResponse.lastActivityDate()).isEqualTo(expectedLastActivityDate);
+        assertThat(actualResponse.answerId()).isEqualTo(expectedAnswerId);
+        assertThat(actualResponse.questionId()).isEqualTo(expectedQuestionId);
     }
 
     @Test
@@ -111,11 +117,15 @@ public class RegularWebClientTest {
             }
             """;
 
-        wireMockServer.stubFor(get(urlEqualTo(String.format("/questions/%d/answers"
-            + "?pagesize=1"
-            + "&order=desc"
-            + "&sort=activity"
-            + "&site=stackoverflow", questionId)))
+        var ucb = UriComponentsBuilder
+            .fromPath("/questions/{questionId}/answers")
+            .queryParam("pagesize", 1)
+            .queryParam("order", "desc")
+            .queryParam("sort", "activity")
+            .queryParam("site", "stackoverflow")
+            .uriVariables(Map.of("questionId", questionId));
+
+        wireMockServer.stubFor(get(urlEqualTo(ucb.toUriString()))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -127,7 +137,7 @@ public class RegularWebClientTest {
         Optional<Response> actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
-        assertThat(actualResponse.isPresent()).isFalse();
+        assertThat(actualResponse).isNotPresent();
     }
 
     @Test
@@ -136,11 +146,15 @@ public class RegularWebClientTest {
         Long questionId = 1732348L;
         String responseBody = "invalid body";
 
-        wireMockServer.stubFor(get(urlEqualTo(String.format("/questions/%d/answers"
-            + "?pagesize=1"
-            + "&order=desc"
-            + "&sort=activity"
-            + "&site=stackoverflow", questionId)))
+        var ucb = UriComponentsBuilder
+            .fromPath("/questions/{questionId}/answers")
+            .queryParam("pagesize", 1)
+            .queryParam("order", "desc")
+            .queryParam("sort", "activity")
+            .queryParam("site", "stackoverflow")
+            .uriVariables(Map.of("questionId", questionId));
+
+        wireMockServer.stubFor(get(urlEqualTo(ucb.toUriString()))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -152,6 +166,6 @@ public class RegularWebClientTest {
         Optional<Response> actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
-        assertThat(actualResponse.isPresent()).isFalse();
+        assertThat(actualResponse).isNotPresent();
     }
 }

@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.util.UriComponentsBuilder;
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Optional;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,8 +91,12 @@ public class RegularWebClientTest {
         String expectedRepoName = "octocat/Hello-World";
         OffsetDateTime expectedCreatedAt = OffsetDateTime.parse("2022-06-09T12:47:28Z");
 
-        wireMockServer.stubFor(get(urlEqualTo(String.format("/networks/%s/%s/events"
-            + "?per_page=1", authorName, repositoryName)))
+        var ucb = UriComponentsBuilder
+            .fromPath("/networks/{authorName}/{repositoryName}/events")
+            .queryParam("per_page", 1)
+            .uriVariables(Map.of("authorName", authorName, "repositoryName", repositoryName));
+
+        wireMockServer.stubFor(get(urlEqualTo(ucb.toUriString()))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -103,11 +109,11 @@ public class RegularWebClientTest {
 
         // Assert
         assertThat(actualResponse).isNotNull();
-        assertThat(actualResponse.getId()).isEqualTo(expectedId);
-        assertThat(actualResponse.getType()).isEqualTo(expectedType);
-        assertThat(actualResponse.getActor().getDisplayLogin()).isEqualTo(expectedActorDisplayLogin);
-        assertThat(actualResponse.getRepo().getName()).isEqualTo(expectedRepoName);
-        assertThat(actualResponse.getCreatedAt()).isEqualTo(expectedCreatedAt);
+        assertThat(actualResponse.id()).isEqualTo(expectedId);
+        assertThat(actualResponse.type()).isEqualTo(expectedType);
+        assertThat(actualResponse.actor().displayLogin()).isEqualTo(expectedActorDisplayLogin);
+        assertThat(actualResponse.repo().name()).isEqualTo(expectedRepoName);
+        assertThat(actualResponse.createdAt()).isEqualTo(expectedCreatedAt);
     }
 
     @Test
@@ -117,8 +123,12 @@ public class RegularWebClientTest {
         String repositoryName = "Hello-World";
         String responseBody = "[]";
 
-        wireMockServer.stubFor(get(urlEqualTo(String.format("/networks/%s/%s/events"
-            + "?per_page=1", authorName, repositoryName)))
+        var ucb = UriComponentsBuilder
+            .fromPath("/networks/{authorName}/{repositoryName}/events")
+            .queryParam("per_page", 1)
+            .uriVariables(Map.of("authorName", authorName, "repositoryName", repositoryName));
+
+        wireMockServer.stubFor(get(urlEqualTo(ucb.toUriString()))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -130,7 +140,7 @@ public class RegularWebClientTest {
         Optional<Response> actualResponse = client.fetchLatestModified(authorName, repositoryName);
 
         // Assert
-        assertThat(actualResponse.isPresent()).isFalse();
+        assertThat(actualResponse).isNotPresent();
     }
 
     @Test
@@ -140,8 +150,12 @@ public class RegularWebClientTest {
         String repositoryName = "Hello-World";
         String responseBody = "invalid body";
 
-        wireMockServer.stubFor(get(urlEqualTo(String.format("/networks/%s/%s/events"
-            + "?per_page=1", authorName, repositoryName)))
+        var ucb = UriComponentsBuilder
+            .fromPath("/networks/{authorName}/{repositoryName}/events")
+            .queryParam("per_page", 1)
+            .uriVariables(Map.of("authorName", authorName, "repositoryName", repositoryName));
+
+        wireMockServer.stubFor(get(urlEqualTo(ucb.toUriString()))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -153,6 +167,6 @@ public class RegularWebClientTest {
         Optional<Response> actualResponse = client.fetchLatestModified(authorName, repositoryName);
 
         // Assert
-        assertThat(actualResponse.isPresent()).isFalse();
+        assertThat(actualResponse).isNotPresent();
     }
 }
