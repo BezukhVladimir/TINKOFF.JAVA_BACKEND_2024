@@ -68,7 +68,7 @@ class MessageServiceTest {
     @ParameterizedTest
     @MethodSource("notRegisteredUserCommands")
     @DisplayName("Пользователь не зарегистрирован, попытка ввести некорректные команды")
-    void unknownUser(String text, String exceptedText) {
+    void unknownUser(String text, String expectedText) {
         // Arrange
         setUpMock(text);
 
@@ -76,7 +76,7 @@ class MessageServiceTest {
         String actualText = messageService.createResponseText(update);
 
         // Assert
-        assertThat(actualText).isEqualTo(exceptedText);
+        assertThat(actualText).isEqualTo(expectedText);
     }
 
     private Stream<Arguments> registeredUserCommands() {
@@ -94,7 +94,7 @@ class MessageServiceTest {
     @ParameterizedTest
     @MethodSource("registeredUserCommands")
     @DisplayName("Пользователь зарегистрирован, попытка ввести некорректные команды")
-    void registeredUser(List<URI> links, SessionState sessionState, String text, String exceptedText) {
+    void registeredUser(List<URI> links, SessionState sessionState, String text, String expectedText) {
         // Arrange
         setUpMock(text);
         registerUser(links, sessionState);
@@ -103,7 +103,7 @@ class MessageServiceTest {
         String actualText = messageService.createResponseText(update);
 
         // Assert
-        assertThat(actualText).isEqualTo(exceptedText);
+        assertThat(actualText).isEqualTo(expectedText);
     }
 
     private void registerUser(List<URI> links, SessionState sessionState) {

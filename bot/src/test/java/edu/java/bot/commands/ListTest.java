@@ -72,26 +72,26 @@ class ListTest {
         // Arrange
         String link = "https://github.com/";
         registerUser(List.of(URI.create(link)));
-        String exceptedText = ListCommand.LIST_MESSAGE + link + System.lineSeparator();
+        String expectedText = ListCommand.LIST_MESSAGE + link + System.lineSeparator();
 
         // Act
         String actualText = listCommand.handle(update);
 
         // Assert
-        assertThat(actualText).isEqualTo(exceptedText);
+        assertThat(actualText).isEqualTo(expectedText);
     }
 
     @Test
     @DisplayName("Пользователь ещё не был зарегистрирован")
     void unknownUser() {
         // Arrange
-        String exceptedText = ListCommand.UNKNOWN_USER_MESSAGE;
+        String expectedText = ListCommand.UNKNOWN_USER_MESSAGE;
 
         // Act
         String actualText = listCommand.handle(update);
 
         // Assert
-        assertThat(actualText).isEqualTo(exceptedText);
+        assertThat(actualText).isEqualTo(expectedText);
     }
 
     private void registerUser() {
