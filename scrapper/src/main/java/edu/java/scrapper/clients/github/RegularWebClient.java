@@ -1,18 +1,19 @@
-package edu.java.clients.stackoverflow;
+package edu.java.scrapper.clients.github;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import edu.java.dto.stackoverflow.Response;
+import edu.java.scrapper.dto.github.Response;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@Component("gitHubRegularWebClient")
 public class RegularWebClient implements Client {
-
-    @Value("${api.stackoverflow.baseUrl}")
+    @Value("${api.github.baseUrl}")
     private String baseUrl;
-
     private final WebClient webClient;
 
     public RegularWebClient() {
@@ -30,18 +31,14 @@ public class RegularWebClient implements Client {
     }
 
     @Override
-    public Optional<Response> fetchLatestModified(Long questionNumber) {
-        String requestUrl = String.format("questions/%d/answers", questionNumber);
+    public Optional<Response> fetchLatestModified(String authorName, String repositoryName) {
+        String requestUrl = String.format("networks/%s/%s/events", authorName, repositoryName);
 
         return Optional.ofNullable(webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path(requestUrl)
-                .queryParam("pagesize", 1)
-                .queryParam("order", "desc")
-                .queryParam("sort", "activity")
-                .queryParam("site", "stackoverflow")
-                .build()
-            )
+                .queryParam("per_page", 1)
+                .build())
             .retrieve()
             .bodyToMono(String.class)
             .mapNotNull(this::parse)
@@ -50,14 +47,12 @@ public class RegularWebClient implements Client {
     }
 
     private Response parse(String json) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
-            JsonNode rootNode = objectMapper.readTree(json);
-            JsonNode itemsNode = rootNode.get("items");
-            JsonNode firstItemNode = itemsNode.get(0);
-            return objectMapper.treeToValue(firstItemNode, Response.class);
+        try {
+            List<Response> responses = objectMapper.readValue(json, new TypeReference<>(){});
+            return responses.get(0);
         } catch (Exception e) {
             return null;
         }

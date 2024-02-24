@@ -1,6 +1,6 @@
-package edu.java.clients.github;
+package edu.java.scrapper.clients.github;
 
-import edu.java.dto.github.Response;
+import edu.java.scrapper.dto.github.Response;
 import java.util.Optional;
 
 

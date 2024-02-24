@@ -1,0 +1,14 @@
+package edu.java.scrapper.configurations.clients;
+
+import edu.java.scrapper.clients.github.RegularWebClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+
+@Configuration
+public class GitHubConfig {
+    @Bean
+    public RegularWebClient gitHubRegularWebClient() {
+        return new RegularWebClient();
+    }
+}

@@ -1,6 +1,6 @@
-package edu.java.clients.stackoverflow;
+package edu.java.scrapper.clients.stackoverflow;
 
-import edu.java.dto.stackoverflow.Response;
+import edu.java.scrapper.dto.stackoverflow.Response;
 import java.util.Optional;
 
 

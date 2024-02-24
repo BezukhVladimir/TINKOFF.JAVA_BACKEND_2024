@@ -1,4 +1,4 @@
-package edu.java.schedulers;
+package edu.java.scrapper.schedulers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

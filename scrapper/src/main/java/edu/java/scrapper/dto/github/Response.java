@@ -1,6 +1,6 @@
 // https://docs.github.com/ru/rest/activity/events?apiVersion=2022-11-28#list-public-events-for-a-network-of-repositories
 
-package edu.java.dto.github;
+package edu.java.scrapper.dto.github;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
