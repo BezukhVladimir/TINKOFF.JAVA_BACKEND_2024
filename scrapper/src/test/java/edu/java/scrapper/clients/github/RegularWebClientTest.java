@@ -1,38 +1,27 @@
 package edu.java.scrapper.clients.github;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import edu.java.clients.github.Client;
-import edu.java.clients.github.RegularWebClient;
-import edu.java.dto.github.Response;
-import org.junit.jupiter.api.AfterEach;
+import edu.java.scrapper.clients.AbstractWireMockTest;
+import edu.java.scrapper.dto.github.Response;
+import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
-import java.time.OffsetDateTime;
-import java.util.Map;
-import java.util.Optional;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RegularWebClientTest {
-    private WireMockServer wireMockServer;
+public class RegularWebClientTest extends AbstractWireMockTest {
     private Client client;
 
     @BeforeEach
     void setUp() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-        WireMock.configureFor("localhost", wireMockServer.port());
         String baseUrl = "http://localhost:" + wireMockServer.port();
         client = new RegularWebClient(baseUrl);
-    }
-
-    @AfterEach
-    void tearDown() {
-        wireMockServer.stop();
     }
 
     @Test
