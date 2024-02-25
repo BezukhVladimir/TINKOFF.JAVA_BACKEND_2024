@@ -8,6 +8,6 @@ import java.util.List;
 public record LinkUpdateRequest(
     @NotNull Long id,
     @NotNull URI url,
-    @NotNull @NotEmpty String description,
-    @NotNull @NotEmpty List<Long> tgChatIds
+    @NotEmpty String description,
+    @NotEmpty List<Long> tgChatIds
 ) {}
