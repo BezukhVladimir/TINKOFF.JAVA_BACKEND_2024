@@ -1,7 +1,6 @@
 package edu.java.scrapper.clients;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
+
 import edu.java.scrapper.api.models.ApiErrorResponse;
 import edu.java.scrapper.api.models.LinkUpdateRequest;
 import edu.java.scrapper.exceptions.ApiErrorException;
@@ -9,7 +8,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -20,22 +18,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 
-public class BotWebClientTest {
-    private WireMockServer wireMockServer;
+public class BotWebClientTest extends AbstractWireMockTest {
     private BotWebClient botWebClient;
 
     @BeforeEach
     void setUp() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-        WireMock.configureFor("localhost", wireMockServer.port());
         String baseUrl = "http://localhost:" + wireMockServer.port();
         botWebClient = new BotWebClient(baseUrl);
-    }
-
-    @AfterEach
-    void tearDown() {
-        wireMockServer.stop();
     }
 
     @Test

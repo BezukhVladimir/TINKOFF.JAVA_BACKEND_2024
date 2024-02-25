@@ -27,7 +27,8 @@ class ListTest {
     Command listCommand;
     UserService userService;
 
-    @Autowired ListTest(Command listCommand, UserService userService) {
+    @Autowired
+    ListTest(Command listCommand, UserService userService) {
         this.listCommand = listCommand;
         this.userService = userService;
     }

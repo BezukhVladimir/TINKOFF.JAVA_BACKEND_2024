@@ -1,14 +1,12 @@
 package edu.java.scrapper.clients.stackoverflow;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.clients.AbstractWireMockTest;
 import edu.java.scrapper.dto.stackoverflow.Response;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -19,22 +17,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RegularWebClientTest {
-    private WireMockServer wireMockServer;
+public class RegularWebClientTest extends AbstractWireMockTest {
     private Client client;
 
     @BeforeEach
     void setUp() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-        WireMock.configureFor("localhost", wireMockServer.port());
         String baseUrl = "http://localhost:" + wireMockServer.port();
         client = new RegularWebClient(baseUrl);
-    }
-
-    @AfterEach
-    void tearDown() {
-        wireMockServer.stop();
     }
 
     @Test

@@ -1,14 +1,13 @@
 package edu.java.scrapper.services;
 
-
 import edu.java.scrapper.api.models.LinkResponse;
 import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 

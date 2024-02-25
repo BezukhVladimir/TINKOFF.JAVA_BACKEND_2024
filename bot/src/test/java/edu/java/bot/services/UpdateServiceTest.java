@@ -1,13 +1,13 @@
 package edu.java.bot.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 import edu.java.bot.api.models.LinkUpdateRequest;
 import edu.java.bot.exceptions.UpdateAlreadyExistsException;
-import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 
 
 public class UpdateServiceTest {

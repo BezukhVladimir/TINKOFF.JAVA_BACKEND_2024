@@ -1,20 +1,17 @@
 package edu.java.bot.clients;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.bot.api.models.AddLinkRequest;
 import edu.java.bot.api.models.LinkResponse;
 import edu.java.bot.api.models.ListLinksResponse;
 import edu.java.bot.api.models.RemoveLinkRequest;
 import edu.java.bot.exceptions.ApiErrorException;
-import org.junit.jupiter.api.AfterEach;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Optional;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -25,8 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 
-public class ScrapperWebClientTest {
-    private WireMockServer wireMockServer;
+public class ScrapperWebClientTest extends AbstractWireMockTest {
     private ScrapperWebClient scrapperWebClient;
 
     private final static String INVALID_BODY = """
@@ -66,16 +62,8 @@ public class ScrapperWebClientTest {
 
     @BeforeEach
     void setUp() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-        WireMock.configureFor("localhost", wireMockServer.port());
         String baseUrl = "http://localhost:" + wireMockServer.port();
         scrapperWebClient = new ScrapperWebClient(baseUrl);
-    }
-
-    @AfterEach
-    void tearDown() {
-        wireMockServer.stop();
     }
 
     @Test
