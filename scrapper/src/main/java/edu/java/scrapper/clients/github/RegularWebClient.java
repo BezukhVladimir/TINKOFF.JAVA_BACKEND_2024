@@ -6,11 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.java.scrapper.dto.github.Response;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Component("gitHubRegularWebClient")
+@Component
+@Qualifier("github")
 public class RegularWebClient implements Client {
     @Value("${api.github.baseUrl}")
     private String baseUrl;
