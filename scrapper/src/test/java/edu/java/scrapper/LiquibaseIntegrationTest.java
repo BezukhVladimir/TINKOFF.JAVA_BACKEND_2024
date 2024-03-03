@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LiquibaseIntegrationTest extends IntegrationTest {
     @Test
     public void example() {
-        // Assert
+        // Arrange
         var jdbcTemplate = new JdbcTemplate(DataSourceBuilder.create()
             .url(POSTGRES.getJdbcUrl())
             .username(POSTGRES.getUsername())
