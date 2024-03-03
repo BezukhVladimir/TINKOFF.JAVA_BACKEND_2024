@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class GitHubConfig {
     @Bean
     @Qualifier("github")
-    public RegularWebClient regularWebClient() {
+    public RegularWebClient gitHubRegularWebClient() {
         return new RegularWebClient();
     }
 }

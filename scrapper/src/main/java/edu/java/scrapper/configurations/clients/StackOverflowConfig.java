@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class StackOverflowConfig {
     @Bean
     @Qualifier("stackoverflow")
-    public RegularWebClient regularWebClient() {
+    public RegularWebClient stackOverflowRegularWebClient() {
         return new RegularWebClient();
     }
 }
