@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress XmlUnusedNamespaceDeclaration -->
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="2024-03-03-create-link-tracker-db" author="Bezukh Vladimir">
+        <sqlFile path="scripts/create_link_tracker_db.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-03-create-chat-table" author="Bezukh Vladimir">
+        <sqlFile path="scripts/create_chat_table.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-03-create-link-table" author="Bezukh Vladimir">
+        <sqlFile path="scripts/create_link_table.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-03-create-chats-links-table" author="Bezukh Vladimir">
+        <sqlFile path="scripts/create_chats_links_table.sql"/>
+    </changeSet>
+</databaseChangeLog>
