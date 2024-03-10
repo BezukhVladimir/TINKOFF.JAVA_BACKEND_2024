@@ -77,11 +77,10 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<String> actualResponse = scrapperWebClient.registerChat(1L);
+        String actualResponse = scrapperWebClient.registerChat(1L);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get()).isEqualTo(responseBody);
+        assertThat(actualResponse).isEqualTo(responseBody);
     }
 
     @Test
@@ -124,11 +123,10 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<String> actualResponse = scrapperWebClient.deleteChat(1L);
+        String actualResponse = scrapperWebClient.deleteChat(1L);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get()).isEqualTo(responseBody);
+        assertThat(actualResponse).isEqualTo(responseBody);
     }
 
     @Test
@@ -173,12 +171,11 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<ListLinksResponse> actualResponse = scrapperWebClient.getLinks(1L);
+        ListLinksResponse actualResponse = scrapperWebClient.getLinks(1L);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get().size()).isEqualTo(1);
-        assertThat(actualResponse.get().links())
+        assertThat(actualResponse.size()).isEqualTo(1);
+        assertThat(actualResponse.links())
             .hasSize(1)
             .extracting(LinkResponse::id, link -> link.url().getPath())
             .containsExactly(tuple(1L, "link"));
@@ -237,14 +234,13 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(LINK_BODY)));
 
         // Act
-        Optional<LinkResponse> actualResponse = scrapperWebClient.addLink(
+        LinkResponse actualResponse = scrapperWebClient.addLink(
             1L, new AddLinkRequest(new URI("123"))
         );
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get().id()).isEqualTo(1);
-        assertThat(actualResponse.get().url().getPath()).isEqualTo("123");
+        assertThat(actualResponse.id()).isEqualTo(1);
+        assertThat(actualResponse.url().getPath()).isEqualTo("123");
     }
 
     @Test
@@ -321,14 +317,13 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(LINK_BODY)));
 
         // Act
-        Optional<LinkResponse> actualResponse = scrapperWebClient.removeLink(
+        LinkResponse actualResponse = scrapperWebClient.removeLink(
             1L, new RemoveLinkRequest(new URI("123"))
         );
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get().id()).isEqualTo(1);
-        assertThat(actualResponse.get().url().getPath()).isEqualTo("123");
+        assertThat(actualResponse.id()).isEqualTo(1);
+        assertThat(actualResponse.url().getPath()).isEqualTo("123");
     }
 
     @Test
