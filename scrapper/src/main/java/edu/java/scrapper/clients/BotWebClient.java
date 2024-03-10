@@ -18,7 +18,7 @@ public class BotWebClient {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 
-    public Optional<String> sendUpdate(LinkUpdateRequest request) {
+    public String sendUpdate(LinkUpdateRequest request) {
         return webClient
             .post()
             .uri("/updates")
@@ -29,6 +29,6 @@ public class BotWebClient {
                     .bodyToMono(ApiErrorResponse.class)
                     .flatMap(errorResponse -> Mono.error(new ApiErrorException(errorResponse))))
             .bodyToMono(String.class)
-            .blockOptional();
+            .block();
     }
 }

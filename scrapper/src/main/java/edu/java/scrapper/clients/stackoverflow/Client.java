@@ -5,5 +5,5 @@ import java.util.Optional;
 
 
 public interface Client {
-    Optional<Response> fetchLatestModified(Long questionNumber);
+    Response fetchLatestModified(Long questionNumber);
 }

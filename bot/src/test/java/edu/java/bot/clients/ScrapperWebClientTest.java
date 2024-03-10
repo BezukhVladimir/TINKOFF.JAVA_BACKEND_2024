@@ -7,7 +7,6 @@ import edu.java.bot.api.models.RemoveLinkRequest;
 import edu.java.bot.exceptions.ApiErrorException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;

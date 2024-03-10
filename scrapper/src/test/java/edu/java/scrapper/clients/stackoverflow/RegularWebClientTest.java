@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -81,7 +80,7 @@ public class RegularWebClientTest extends AbstractWireMockTest {
         );
 
         // Act
-        Response actualResponse = client.fetchLatestModified(questionId).get();
+        Response actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
         assertThat(actualResponse).isNotNull();
@@ -121,10 +120,10 @@ public class RegularWebClientTest extends AbstractWireMockTest {
         );
 
         // Act
-        Optional<Response> actualResponse = client.fetchLatestModified(questionId);
+        Response actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
-        assertThat(actualResponse).isNotPresent();
+        assertThat(actualResponse).isNotNull();
     }
 
     @Test
@@ -150,9 +149,9 @@ public class RegularWebClientTest extends AbstractWireMockTest {
         );
 
         // Act
-        Optional<Response> actualResponse = client.fetchLatestModified(questionId);
+        Response actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
-        assertThat(actualResponse).isNotPresent();
+        assertThat(actualResponse).isNotNull();
     }
 }

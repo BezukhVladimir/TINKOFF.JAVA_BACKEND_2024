@@ -29,10 +29,10 @@ public class RegularWebClient implements Client {
     }
 
     @Override
-    public Optional<Response> fetchLatestModified(Long questionNumber) {
+    public Response fetchLatestModified(Long questionNumber) {
         String requestUrl = String.format("questions/%d/answers", questionNumber);
 
-        return Optional.ofNullable(webClient.get()
+        return webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path(requestUrl)
                 .queryParam("pagesize", 1)
@@ -44,8 +44,7 @@ public class RegularWebClient implements Client {
             .retrieve()
             .bodyToMono(String.class)
             .mapNotNull(this::parse)
-            .block()
-        );
+            .block();
     }
 
     private Response parse(String json) {

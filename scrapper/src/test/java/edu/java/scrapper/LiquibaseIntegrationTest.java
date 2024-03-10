@@ -1,12 +1,11 @@
 package edu.java.scrapper;
 
 import edu.java.scrapper.configurations.DataSourceConfig;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import javax.sql.DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(DataSourceConfig.class)

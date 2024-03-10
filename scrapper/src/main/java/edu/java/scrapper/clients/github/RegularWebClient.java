@@ -30,10 +30,10 @@ public class RegularWebClient implements Client {
     }
 
     @Override
-    public Optional<Response> fetchLatestModified(String authorName, String repositoryName) {
+    public Response fetchLatestModified(String authorName, String repositoryName) {
         String requestUrl = String.format("networks/%s/%s/events", authorName, repositoryName);
 
-        return Optional.ofNullable(webClient.get()
+        return webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path(requestUrl)
                 .queryParam("per_page", 1)
@@ -41,8 +41,7 @@ public class RegularWebClient implements Client {
             .retrieve()
             .bodyToMono(String.class)
             .mapNotNull(this::parse)
-            .block()
-        );
+            .block();
     }
 
     private Response parse(String json) {

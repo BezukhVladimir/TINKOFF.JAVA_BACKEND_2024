@@ -5,5 +5,5 @@ import java.util.Optional;
 
 
 public interface Client {
-    Optional<Response> fetchLatestModified(String repositoryName, String authorName);
+    Response fetchLatestModified(String repositoryName, String authorName);
 }
