@@ -123,7 +123,7 @@ public class RegularWebClientTest extends AbstractWireMockTest {
         Response actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
-        assertThat(actualResponse).isNotNull();
+        assertThat(actualResponse).isNull();
     }
 
     @Test
@@ -152,6 +152,6 @@ public class RegularWebClientTest extends AbstractWireMockTest {
         Response actualResponse = client.fetchLatestModified(questionId);
 
         // Assert
-        assertThat(actualResponse).isNotNull();
+        assertThat(actualResponse).isNull();
     }
 }
