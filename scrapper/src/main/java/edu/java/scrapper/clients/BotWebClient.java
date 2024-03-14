@@ -3,7 +3,6 @@ package edu.java.scrapper.clients;
 import edu.java.scrapper.api.models.ApiErrorResponse;
 import edu.java.scrapper.api.models.LinkUpdateRequest;
 import edu.java.scrapper.exceptions.ApiErrorException;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;

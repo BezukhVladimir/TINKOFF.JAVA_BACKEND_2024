@@ -6,7 +6,6 @@ import edu.java.bot.api.models.LinkResponse;
 import edu.java.bot.api.models.ListLinksResponse;
 import edu.java.bot.api.models.RemoveLinkRequest;
 import edu.java.bot.exceptions.ApiErrorException;
-import java.util.Optional;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.BodyInserters;
