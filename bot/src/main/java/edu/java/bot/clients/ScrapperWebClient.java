@@ -90,7 +90,7 @@ public class ScrapperWebClient {
             .block();
     }
 
-    private final static String PATH_TO_CHAT = "tg-chat/{id}";
-    private final static String PATH_TO_LINK = "/links";
-    private final static String HEADER_NAME = "Tg-Chat-Id";
+    private static final String PATH_TO_CHAT = "tg-chat/{id}";
+    private static final String PATH_TO_LINK = "/links";
+    private static final String HEADER_NAME = "Tg-Chat-Id";
 }

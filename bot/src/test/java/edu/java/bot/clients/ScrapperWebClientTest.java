@@ -24,7 +24,7 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 public class ScrapperWebClientTest extends AbstractWireMockTest {
     private ScrapperWebClient scrapperWebClient;
 
-    private final static String INVALID_BODY = """
+    private static final String INVALID_BODY = """
                 {
                     "description":"123",
                     "code":"400",
@@ -38,7 +38,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 }
             """;
 
-    private final static String NOT_FOUND_BODY = """
+    private static final String NOT_FOUND_BODY = """
                 {
                     "description":"123",
                     "code":"404",
@@ -52,7 +52,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 }
             """;
 
-    private final static String LINK_BODY = """
+    private static final String LINK_BODY = """
             {
                 "id":1,
                 "url":"123"
