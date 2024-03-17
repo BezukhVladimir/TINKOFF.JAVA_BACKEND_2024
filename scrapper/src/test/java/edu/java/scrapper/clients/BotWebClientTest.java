@@ -32,7 +32,7 @@ public class BotWebClientTest extends AbstractWireMockTest {
         String responseBody = "Обновление обработано";
         LinkUpdateRequest request = new LinkUpdateRequest(
             1L,
-            new URI("1"),
+            URI.create("1"),
             "1",
             List.of(1L)
         );

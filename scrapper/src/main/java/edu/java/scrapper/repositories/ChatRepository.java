@@ -1,6 +1,7 @@
 package edu.java.scrapper.repositories;
 
 import edu.java.scrapper.models.Chat;
+import java.net.URI;
 import java.util.List;
 
 public interface ChatRepository {
@@ -14,5 +15,5 @@ public interface ChatRepository {
 
     List<Chat> findAll();
 
-    List<Chat> findAllChatsByUrl(String url);
+    List<Chat> findAllChatsByUrl(URI url);
 }
