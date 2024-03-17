@@ -1,9 +1,10 @@
 --liquibase formatted sql
 
 CREATE TABLE IF NOT EXISTS link_tracker_db.Link (
-    id          BIGINT       NOT NULL,
-    url         VARCHAR(255) NOT NULL UNIQUE,
-    last_update TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    id          BIGINT GENERATED ALWAYS AS IDENTITY,
+    url         VARCHAR(255) NOT NULL,
+    last_update TIMESTAMPTZ  NOT NULL,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (url)
 );
