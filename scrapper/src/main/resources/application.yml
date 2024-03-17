@@ -2,6 +2,7 @@ app:
   scheduler:
     enable: true
     interval: 10000
+    removeUnusedLinksInterval: 86400
     force-check-delay: 10000
 
 spring:

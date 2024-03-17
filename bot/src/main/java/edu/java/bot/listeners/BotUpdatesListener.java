@@ -43,6 +43,10 @@ public class BotUpdatesListener implements UpdatesListener {
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
+    public void sendMessage(String chatId, String message) {
+        telegramBot.execute(new SendMessage(chatId, message));
+    }
+
     private static Callback<SendMessage, SendResponse> getCallback() {
         return new Callback<>() {
             @Override
