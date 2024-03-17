@@ -1,4 +1,4 @@
-package edu.java.scrapper.services.updaters;
+package edu.java.scrapper.services.jdbc.updaters;
 
 import edu.java.scrapper.api.models.LinkUpdateRequest;
 import edu.java.scrapper.clients.BotWebClient;
@@ -8,6 +8,7 @@ import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.ChatRepository;
 import edu.java.scrapper.repositories.LinkRepository;
+import edu.java.scrapper.services.LinkUpdater;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class StackOverflowLinkUpdater implements LinkUpdater {
+public class JdbcStackOverflowLinkUpdater implements LinkUpdater {
     private final Client stackOverflowRegularWebClient;
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
@@ -42,7 +43,7 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
             try {
                 botWebClient.sendUpdate(new LinkUpdateRequest(
                     link.id(),
-                    new URI(link.url()),
+                    link.url(),
                     getDescription(stackOverflowResponse),
                     chatIds
                 ));
@@ -56,13 +57,13 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
     }
 
     @Override
-    public boolean supports(String url) {
-        return url.startsWith("https://stackoverflow.com/questions/");
+    public boolean supports(URI url) {
+        return url.toString().startsWith("https://stackoverflow.com/questions/");
     }
 
     @Override
-    public String[] processLink(String url) {
-        return url.split("/");
+    public String[] processLink(URI url) {
+        return url.toString().split("/");
     }
 
     @Override
@@ -84,7 +85,7 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
 
     private String getDescription(Response stackOverflowResponse) {
         return
-            "New answer for question №" + stackOverflowResponse.questionId() + System.lineSeparator()
-            + "owner " + stackOverflowResponse.owner().displayName();
+            "Новый вопрос с номером №" + stackOverflowResponse.questionId() + System.lineSeparator()
+            + "от " + stackOverflowResponse.owner().displayName();
     }
 }

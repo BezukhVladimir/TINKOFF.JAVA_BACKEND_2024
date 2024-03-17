@@ -1,14 +1,14 @@
-package edu.java.scrapper.services.updaters;
+package edu.java.scrapper.services;
 
 import edu.java.scrapper.models.Link;
-
+import java.net.URI;
 
 public interface LinkUpdater {
     int process(Link link);
 
-    boolean supports(String url);
+    boolean supports(URI url);
 
-    String[] processLink(String link);
+    String[] processLink(URI url);
 
     String getDomain();
 

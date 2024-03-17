@@ -1,4 +1,4 @@
-package edu.java.scrapper.services.updaters;
+package edu.java.scrapper.services.jooq.updaters;
 
 import edu.java.scrapper.api.models.LinkUpdateRequest;
 import edu.java.scrapper.clients.BotWebClient;
@@ -8,6 +8,7 @@ import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.ChatRepository;
 import edu.java.scrapper.repositories.LinkRepository;
+import edu.java.scrapper.services.LinkUpdater;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class GitHubLinkUpdater implements LinkUpdater {
+public class JooqGitHubLinkUpdater implements LinkUpdater {
     private final Client gitHubRegularWebClient;
-    private final ChatRepository chatRepository;
-    private final LinkRepository linkRepository;
+    private final ChatRepository jooqChatRepository;
+    private final LinkRepository jooqLinkRepository;
     private final BotWebClient botWebClient;
 
     @Override
@@ -31,7 +32,7 @@ public class GitHubLinkUpdater implements LinkUpdater {
             .fetchLatestModified(args[0], args[1]);
 
         if (gitHubResponse.createdAt().isAfter(link.lastUpdate())) {
-            List<Long> chatIds = chatRepository
+            List<Long> chatIds = jooqChatRepository
                 .findAllChatsByUrl(link.url())
                 .stream()
                 .map(Chat::id)
@@ -40,14 +41,14 @@ public class GitHubLinkUpdater implements LinkUpdater {
             try {
                 botWebClient.sendUpdate(new LinkUpdateRequest(
                     link.id(),
-                    new URI(link.url()),
+                    link.url(),
                     getDescription(gitHubResponse),
                     chatIds
                 ));
             } catch (Exception ignored) {
             }
 
-            linkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
+            jooqLinkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
             return 1;
         }
 
@@ -55,13 +56,13 @@ public class GitHubLinkUpdater implements LinkUpdater {
     }
 
     @Override
-    public boolean supports(String url) {
-        return url.startsWith("https://github.com/");
+    public boolean supports(URI url) {
+        return url.toString().startsWith("https://github.com/");
     }
 
     @Override
-    public String[] processLink(String url) {
-        String[] parts = url.split("/");
+    public String[] processLink(URI url) {
+        String[] parts = url.toString().split("/");
 
         String accountName = parts[parts.length - 2];
         String repositoryName = parts[parts.length - 1];
@@ -81,13 +82,13 @@ public class GitHubLinkUpdater implements LinkUpdater {
         Response gitHubResponse =
             gitHubRegularWebClient.fetchLatestModified(args[0], args[1]);
 
-        linkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
+        jooqLinkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
     }
 
     private String getDescription(Response gitHubResponse) {
         return
             gitHubResponse.type() + System.lineSeparator()
-            + "repo " + gitHubResponse.repo()
-            + " by " + gitHubResponse.actor();
+            + "репозиторий " + gitHubResponse.repo()
+            + " создан " + gitHubResponse.actor();
     }
 }

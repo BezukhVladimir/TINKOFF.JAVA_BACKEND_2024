@@ -2,9 +2,10 @@ package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Link;
+import edu.java.scrapper.repositories.LinkRepository;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.scrapper.repositories.LinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @RequiredArgsConstructor
 @SuppressWarnings({"MultipleStringLiterals"})
-public class JdbcLinkRepository implements LinkRepository {
+public class JooqLinkRepository implements LinkRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     @Transactional
-    public Link add(Long chatId, String url) {
+    public Link add(Long chatId, URI url) {
         Link addedLink;
 
         try {
@@ -31,7 +32,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 INSERT INTO link_tracker_db.link (id, url, last_update)
                 VALUES (DEFAULT, ?, ?)
                 """,
-                url, OffsetDateTime.now()
+                url.toString(), OffsetDateTime.now()
             );
 
             addedLink = findByUrl(url);
@@ -66,7 +67,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public void remove(Long chatId, String url) {
+    public void remove(Long chatId, URI url) {
         int rowsAffected = jdbcTemplate.update(
                 """
                 DELETE FROM link_tracker_db.chats_links cl
@@ -75,7 +76,7 @@ public class JdbcLinkRepository implements LinkRepository {
                    AND cl.id_link = l.id
                    AND l.url = ?
                 """,
-            chatId, url
+            chatId, url.toString()
         );
 
         if (rowsAffected == 0) {
@@ -106,7 +107,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Link findByUrl(String url) throws DataAccessException {
+    public Link findByUrl(URI url) throws DataAccessException {
         return jdbcTemplate.queryForObject(
             """
             SELECT *
@@ -115,10 +116,10 @@ public class JdbcLinkRepository implements LinkRepository {
             """,
             (rs, rowNum) -> new Link(
                 rs.getLong("id"),
-                rs.getString("url"),
+                URI.create(rs.getString("url")),
                 rs.getObject("last_update", OffsetDateTime.class)
             ),
-            url
+            url.toString()
         );
     }
 
@@ -131,7 +132,7 @@ public class JdbcLinkRepository implements LinkRepository {
             """,
             (rs, rowNum) -> new Link(
                 rs.getLong("id"),
-                rs.getString("url"),
+                URI.create(rs.getString("url")),
                 rs.getObject("last_update", OffsetDateTime.class)
             )
         );
@@ -149,7 +150,7 @@ public class JdbcLinkRepository implements LinkRepository {
             """,
             (rs, rowNum) -> new Link(
                 rs.getLong("id"),
-                rs.getString("url"),
+                URI.create(rs.getString("url")),
                 rs.getObject("last_update", OffsetDateTime.class)
             ),
             chatId
@@ -167,7 +168,7 @@ public class JdbcLinkRepository implements LinkRepository {
             """,
             (rs, rowNum) -> new Link(
                 rs.getLong("id"),
-                rs.getString("url"),
+                URI.create(rs.getString("url")),
                 rs.getObject("last_update", OffsetDateTime.class)
             ),
             count
@@ -175,14 +176,14 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public void setLastUpdate(String url, OffsetDateTime time) {
+    public void setLastUpdate(URI url, OffsetDateTime time) {
         jdbcTemplate.update(
             """
             UPDATE link_tracker_db.link
                SET last_update = ?
              WHERE url = ?
             """,
-            time, url
+            time, url.toString()
         );
     }
 }

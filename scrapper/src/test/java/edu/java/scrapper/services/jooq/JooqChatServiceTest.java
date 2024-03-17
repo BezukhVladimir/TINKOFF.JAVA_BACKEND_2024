@@ -1,10 +1,12 @@
-package edu.java.scrapper.services;
+package edu.java.scrapper.services.jooq;
 
 import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.exceptions.NotFoundException;
 import edu.java.scrapper.repositories.ChatRepository;
-import edu.java.scrapper.repositories.jdbc.JdbcChatRepository;
+import edu.java.scrapper.repositories.jdbc.JooqChatRepository;
+import edu.java.scrapper.services.ChatService;
+import edu.java.scrapper.services.jdbc.JdbcChatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,22 +17,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-class ChatServiceTest {
-    private ChatRepository chatRepository;
-    private ChatService chatService;
+class JooqChatServiceTest {
+    private ChatRepository jooqChatRepository;
+    private ChatService jooqChatService;
+
     @BeforeEach
     void setUp() {
-        chatRepository = mock(JdbcChatRepository.class);
-        chatService = new ChatService(chatRepository);
+        jooqChatRepository = mock(JooqChatRepository.class);
+        jooqChatService = new JdbcChatService(jooqChatRepository);
     }
 
     @Test
     public void register() {
         // Act
-        chatService.register(1L);
+        jooqChatService.register(1L);
 
         // Assert
-        verify(chatRepository).add(1L);
+        verify(jooqChatRepository).add(1L);
     }
 
     @Test
@@ -38,11 +41,11 @@ class ChatServiceTest {
         // Arrange
         doAnswer(invocation -> {
             throw new DuplicateKeyException("");
-        }).when(chatRepository).add(1L);
+        }).when(jooqChatRepository).add(1L);
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            chatService.register(1L);
+            jooqChatService.register(1L);
         });
 
         // Assert
@@ -54,10 +57,10 @@ class ChatServiceTest {
     @Test
     public void unregister() {
         // Act
-        chatService.unregister(1L);
+        jooqChatService.unregister(1L);
 
         // Assert
-        verify(chatRepository).remove(1L);
+        verify(jooqChatRepository).remove(1L);
     }
 
     @Test
@@ -65,11 +68,11 @@ class ChatServiceTest {
         // Arrange
         doAnswer(invocation -> {
             throw new EntityNotFoundException("");
-        }).when(chatRepository).remove(1L);
+        }).when(jooqChatRepository).remove(1L);
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            chatService.unregister(1L);
+            jooqChatService.unregister(1L);
         });
 
         // Assert

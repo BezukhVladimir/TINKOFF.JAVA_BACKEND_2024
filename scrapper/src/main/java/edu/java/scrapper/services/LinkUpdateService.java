@@ -2,8 +2,6 @@ package edu.java.scrapper.services;
 
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.LinkRepository;
-import edu.java.scrapper.services.updaters.LinkHolder;
-import edu.java.scrapper.services.updaters.LinkUpdater;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

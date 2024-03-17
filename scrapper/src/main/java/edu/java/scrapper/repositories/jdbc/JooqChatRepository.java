@@ -2,9 +2,10 @@ package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Chat;
+import edu.java.scrapper.repositories.ChatRepository;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.scrapper.repositories.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @RequiredArgsConstructor
 @SuppressWarnings({"MultipleStringLiterals"})
-public class JdbcChatRepository implements ChatRepository {
+public class JooqChatRepository implements ChatRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -89,7 +90,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public List<Chat> findAllChatsByUrl(String url) {
+    public List<Chat> findAllChatsByUrl(URI url) {
         return jdbcTemplate.query(
             """
             SELECT c.id, c.created_at
@@ -102,7 +103,7 @@ public class JdbcChatRepository implements ChatRepository {
                 rs.getLong("id"),
                 rs.getObject("created_at", OffsetDateTime.class)
             ),
-            url
+            url.toString()
         );
     }
 }

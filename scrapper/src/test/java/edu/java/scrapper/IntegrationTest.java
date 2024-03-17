@@ -11,6 +11,9 @@ import liquibase.Liquibase;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.DirectoryResourceAccessor;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -24,6 +27,8 @@ public abstract class IntegrationTest {
     public static final PostgreSQLContainer<?> POSTGRES;
     public static final DataSource dataSource;
     public static final JdbcTemplate jdbcTemplate;
+    public static DSLContext dslContext;
+
 
     static {
         POSTGRES = new PostgreSQLContainer<>("postgres:15")
@@ -39,6 +44,7 @@ public abstract class IntegrationTest {
             .build();
 
         jdbcTemplate = new JdbcTemplate(dataSource);
+        dslContext = DSL.using(dataSource, SQLDialect.POSTGRES);
 
         runMigrations(POSTGRES);
     }

@@ -1,11 +1,10 @@
-package edu.java.scrapper.repositories;
+package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.models.Link;
-import edu.java.scrapper.repositories.jdbc.JdbcChatRepository;
-import edu.java.scrapper.repositories.jdbc.JdbcLinkRepository;
+import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,19 +14,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class JdbcChatRepositoryTest extends IntegrationTest {
-    private static JdbcChatRepository chatRepository;
-    private static JdbcLinkRepository linkRepository;
+    private static JooqChatRepository jdbcChatRepository;
+    private static JooqLinkRepository jdbcLinkRepository;
 
     @BeforeAll
     static void setUp() {
-        chatRepository = new JdbcChatRepository(jdbcTemplate);
-        linkRepository = new JdbcLinkRepository(jdbcTemplate);
+        jdbcChatRepository = new JooqChatRepository(jdbcTemplate);
+        jdbcLinkRepository = new JooqLinkRepository(jdbcTemplate);
     }
 
     @AfterEach
     void clear() {
-        chatRepository.removeAll();
-        linkRepository.removeAll();
+        jdbcChatRepository.removeAll();
+        jdbcLinkRepository.removeAll();
     }
 
     @Test
@@ -36,8 +35,8 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         Long chatId = 1L;
 
         // Act
-        Chat chat1 = chatRepository.add(chatId);
-        List<Chat> chats = chatRepository.findAll();
+        Chat chat1 = jdbcChatRepository.add(chatId);
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).containsOnly(chat1);
@@ -47,11 +46,11 @@ class JdbcChatRepositoryTest extends IntegrationTest {
     void addDuplicate() {
         // Arrange
         Long chatId = 1L;
-        chatRepository.add(chatId);
+        jdbcChatRepository.add(chatId);
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            chatRepository.add(chatId);
+            jdbcChatRepository.add(chatId);
         });
 
         // Assert
@@ -62,11 +61,11 @@ class JdbcChatRepositoryTest extends IntegrationTest {
     void remove() {
         // Arrange
         Long chatId = 1L;
-        chatRepository.add(chatId);
+        jdbcChatRepository.add(chatId);
 
         // Act
-        chatRepository.remove(chatId);
-        List<Chat> chats = chatRepository.findAll();
+        jdbcChatRepository.remove(chatId);
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).isEmpty();
@@ -79,7 +78,7 @@ class JdbcChatRepositoryTest extends IntegrationTest {
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            chatRepository.remove(chatId);
+            jdbcChatRepository.remove(chatId);
         });
 
         // Assert
@@ -91,20 +90,20 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         // Arrange
         Long chat1Id = 1L;
         Long chat2Id = 2L;
-        String link1Url = "https://first.com";
-        String link2Url = "https://second.com";
+        URI link1Url = URI.create("https://first.com");
+        URI link2Url = URI.create("https://second.com");
 
-        chatRepository.add(chat1Id);
-        chatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat1Id);
+        jdbcChatRepository.add(chat2Id);
 
-        linkRepository.add(chat1Id, link1Url);
-        linkRepository.add(chat1Id, link2Url);
-        Link link21 = linkRepository.add(chat2Id, link1Url);
-        Link link22 = linkRepository.add(chat2Id, link2Url);
+        jdbcLinkRepository.add(chat1Id, link1Url);
+        jdbcLinkRepository.add(chat1Id, link2Url);
+        Link link21 = jdbcLinkRepository.add(chat2Id, link1Url);
+        Link link22 = jdbcLinkRepository.add(chat2Id, link2Url);
 
         // Act
-        chatRepository.remove(chat1Id);
-        List<Link> links = linkRepository.findAll();
+        jdbcChatRepository.remove(chat1Id);
+        List<Link> links = jdbcLinkRepository.findAll();
 
         // Assert
         assertThat(links).containsOnly(
@@ -119,13 +118,13 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         Long chat2Id = 2L;
         Long chat3Id = 3L;
 
-        chatRepository.add(chat1Id);
-        chatRepository.add(chat2Id);
-        chatRepository.add(chat3Id);
+        jdbcChatRepository.add(chat1Id);
+        jdbcChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat3Id);
 
         // Act
-        chatRepository.removeAll();
-        List<Chat> chats = chatRepository.findAll();
+        jdbcChatRepository.removeAll();
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).isEmpty();
@@ -138,12 +137,12 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         Long chat2Id = 2L;
         Long chat3Id = 3L;
 
-        Chat expectedChat1 = chatRepository.add(chat1Id);
-        chatRepository.add(chat2Id);
-        chatRepository.add(chat3Id);
+        Chat expectedChat1 = jdbcChatRepository.add(chat1Id);
+        jdbcChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat3Id);
 
         // Act
-        Chat actualChat1 = chatRepository.findById(chat1Id);
+        Chat actualChat1 = jdbcChatRepository.findById(chat1Id);
 
         // Assert
         assertThat(actualChat1).isEqualTo(expectedChat1);
@@ -156,12 +155,12 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         Long chat2Id = 2L;
         Long chat3Id = 3L;
 
-        Chat chat1 = chatRepository.add(chat1Id);
-        Chat chat2 = chatRepository.add(chat2Id);
-        Chat chat3 = chatRepository.add(chat3Id);
+        Chat chat1 = jdbcChatRepository.add(chat1Id);
+        Chat chat2 = jdbcChatRepository.add(chat2Id);
+        Chat chat3 = jdbcChatRepository.add(chat3Id);
 
         // Act
-        List<Chat> chats = chatRepository.findAll();
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).containsOnly(
@@ -175,21 +174,21 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         Long chat1Id = 1L;
         Long chat2Id = 2L;
         Long chat3Id = 3L;
-        String link1Url = "https://first.com";
-        String link2Url = "https://second.com";
-        String link3Url = "https://third.com";
+        URI link1Url = URI.create("https://first.com");
+        URI link2Url = URI.create("https://second.com");
+        URI link3Url = URI.create("https://third.com");
 
-        Chat chat1 = chatRepository.add(chat1Id);
-        Chat chat2 = chatRepository.add(chat2Id);
-        chatRepository.add(chat3Id);
+        Chat chat1 = jdbcChatRepository.add(chat1Id);
+        Chat chat2 = jdbcChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat3Id);
 
-        linkRepository.add(chat1Id, link1Url);
-        linkRepository.add(chat2Id, link1Url);
-        linkRepository.add(chat2Id, link2Url);
-        linkRepository.add(chat3Id, link3Url);
+        jdbcLinkRepository.add(chat1Id, link1Url);
+        jdbcLinkRepository.add(chat2Id, link1Url);
+        jdbcLinkRepository.add(chat2Id, link2Url);
+        jdbcLinkRepository.add(chat3Id, link3Url);
 
         // Act
-        List<Chat> chats = chatRepository.findAllChatsByUrl(link1Url);
+        List<Chat> chats = jdbcChatRepository.findAllChatsByUrl(link1Url);
 
         // Assert
         assertThat(chats).containsOnly(
