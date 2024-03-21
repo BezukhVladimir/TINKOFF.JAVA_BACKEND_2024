@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BotWebConfig {
-    @Value(value = "${api.bot.baseUrl}")
+    @Value("${api.bot.baseUrl}")
     public String baseUrl;
 
     @Bean

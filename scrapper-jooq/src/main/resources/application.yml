@@ -1,0 +1,38 @@
+app:
+  scheduler:
+    enable: true
+    interval: 10000
+    removeUnusedLinksInterval: 86400
+    force-check-delay: 10000
+
+spring:
+  application:
+    name: scrapper-jooq
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrapper-jooq
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+jooq:
+  schema: link_tracker_db
+
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+api:
+  bot:
+    baseUrl: http://localhost:8090
+  github:
+    baseUrl: https://api.github.com/
+  stackoverflow:
+    baseUrl: https://api.stackexchange.com/2.3/
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

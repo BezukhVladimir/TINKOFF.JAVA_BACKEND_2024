@@ -1,6 +1,6 @@
 package edu.java.scrapper.schedulers;
 
-import edu.java.scrapper.services.LinkUpdateService;
+import edu.java.scrapper.services.updates.LinkUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

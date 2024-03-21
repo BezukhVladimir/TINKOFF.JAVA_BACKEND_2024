@@ -1,10 +1,10 @@
 package edu.java.scrapper.utils;
 
 import java.net.URI;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class LinkUtils {
-    private LinkUtils() {}
-
     public static String extractDomainFromUrl(URI url) {
         String textUrl = url.toString();
 
