@@ -4,6 +4,7 @@ import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.exceptions.NotFoundException;
 import edu.java.scrapper.repositories.chats.ChatRepository;
+import edu.java.scrapper.repositories.chats.JdbcChatRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.verify;
 class JdbcChatServiceTest {
     @Autowired
     private ChatService jdbcChatService;
-    @MockBean
+    @MockBean(JdbcChatRepository.class)
     private ChatRepository jdbcChatRepository;
 
     @Test

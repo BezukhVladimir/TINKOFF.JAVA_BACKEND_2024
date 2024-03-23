@@ -11,12 +11,13 @@ import static edu.java.scrapper.utils.LinkUtils.extractDomainFromUrl;
 @Service
 @RequiredArgsConstructor
 public class LinkUpdateService {
-    private final LinkRepository linkRepository;
-    private final LinkHolder linkHolder;
     private final static int UPDATES = 3;
 
+    private final LinkRepository jdbcLinkRepository;
+    private final LinkHolder linkHolder;
+
     public int update() {
-        List<Link> links = linkRepository.findByOldestUpdates(UPDATES);
+        List<Link> links = jdbcLinkRepository.findByOldestUpdates(UPDATES);
 
         int count = 0;
         for (Link link : links) {
@@ -32,6 +33,6 @@ public class LinkUpdateService {
     }
 
     public void removeUnusedLinks() {
-        linkRepository.removeUnusedLinks();
+        jdbcLinkRepository.removeUnusedLinks();
     }
 }

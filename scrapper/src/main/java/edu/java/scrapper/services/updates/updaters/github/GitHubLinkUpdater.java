@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JooqGitHubLinkUpdater implements LinkUpdater {
-    private final Client gitHubRegularWebClient;
-    private final ChatRepository jooqChatRepository;
-    private final LinkRepository jooqLinkRepository;
+public class GitHubLinkUpdater implements LinkUpdater {
     private final BotWebClient botWebClient;
+    private final Client gitHubRegularWebClient;
+    private final ChatRepository jdbcChatRepository;
+    private final LinkRepository jdbcLinkRepository;
 
     @Override
     public int process(Link link) {
@@ -31,7 +31,7 @@ public class JooqGitHubLinkUpdater implements LinkUpdater {
             .fetchLatestModified(args[0], args[1]);
 
         if (gitHubResponse.createdAt().isAfter(link.lastUpdate())) {
-            List<Long> chatIds = jooqChatRepository
+            List<Long> chatIds = jdbcChatRepository
                 .findAllChatsByUrl(link.url())
                 .stream()
                 .map(Chat::id)
@@ -47,7 +47,7 @@ public class JooqGitHubLinkUpdater implements LinkUpdater {
             } catch (Exception ignored) {
             }
 
-            jooqLinkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
+            jdbcLinkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
             return 1;
         }
 
@@ -81,7 +81,7 @@ public class JooqGitHubLinkUpdater implements LinkUpdater {
         Response gitHubResponse =
             gitHubRegularWebClient.fetchLatestModified(args[0], args[1]);
 
-        jooqLinkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
+        jdbcLinkRepository.setLastUpdate(link.url(), gitHubResponse.createdAt());
     }
 
     private String getDescription(Response gitHubResponse) {

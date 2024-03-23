@@ -7,20 +7,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "app.scheduler.enable", havingValue = "true")
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "app.scheduler.enable", havingValue = "true")
 public class LinkUpdaterScheduler {
-    private final LinkUpdateService linkUpdateService;
+    private final LinkUpdateService jdbcLinkUpdateService;
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
         log.info("Running update");
 
         try {
-            linkUpdateService.update();
+            jdbcLinkUpdateService.update();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -31,7 +30,7 @@ public class LinkUpdaterScheduler {
         log.info("Remove unused links");
 
         try {
-            linkUpdateService.removeUnusedLinks();
+            jdbcLinkUpdateService.removeUnusedLinks();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

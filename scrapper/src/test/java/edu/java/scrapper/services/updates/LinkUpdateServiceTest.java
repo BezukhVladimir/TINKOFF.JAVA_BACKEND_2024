@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class LinkUpdateServiceTest {
     @Mock
-    private LinkRepository linkRepository;
+    private LinkRepository jdbcLinkRepository;
     @Mock
     private LinkHolder linkHolder;
     @Mock
@@ -26,7 +26,7 @@ public class LinkUpdateServiceTest {
     @Test
     public void process() {
         // Arrange
-        when(linkRepository.findByOldestUpdates(3))
+        when(jdbcLinkRepository.findByOldestUpdates(3))
             .thenReturn(List.of(
                 new Link(1L, URI.create("1"), OffsetDateTime.MAX),
                 new Link(2L, URI.create("2"), OffsetDateTime.MAX),
@@ -36,7 +36,7 @@ public class LinkUpdateServiceTest {
         when(linkUpdater.supports(any())).thenReturn(true);
         when(linkUpdater.process(any())).thenReturn(1);
 
-        var linkUpdateService = new LinkUpdateService(linkRepository, linkHolder);
+        var linkUpdateService = new LinkUpdateService(jdbcLinkRepository, linkHolder);
 
         // Act
         int count = linkUpdateService.update();

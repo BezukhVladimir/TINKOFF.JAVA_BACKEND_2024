@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class JdbcGitHubLinkUpdaterTest {
+class GitHubLinkUpdaterTest {
     @Mock
     private RegularWebClient gitHubRegularWebClient;
     @Mock
@@ -29,7 +29,7 @@ class JdbcGitHubLinkUpdaterTest {
     @Mock
     private BotWebClient botWebClient;
     @InjectMocks
-    private JdbcGitHubLinkUpdater jdbcGitHubLinkUpdater;
+    private GitHubLinkUpdater jdbcGitHubLinkUpdater;
 
 
     @Test

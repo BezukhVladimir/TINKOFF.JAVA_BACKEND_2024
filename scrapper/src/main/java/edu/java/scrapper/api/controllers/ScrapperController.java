@@ -20,24 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ScrapperController {
-    private final ChatService chatService;
-    private final LinkService linkService;
+    private final ChatService jdbcChatService;
+    private final LinkService jdbcLinkService;
 
     @PostMapping("/tg-chat/{id}")
     public String registerChat(@PathVariable("id") Long id) {
-        chatService.register(id);
+        jdbcChatService.register(id);
         return "Чат зарегистрирован";
     }
 
     @DeleteMapping("/tg-chat/{id}")
     public String deleteChat(@PathVariable("id") Long id) {
-        chatService.unregister(id);
+        jdbcChatService.unregister(id);
         return "Чат успешно удалён";
     }
 
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader("Tg-Chat-Id") Long chatId) {
-        List<LinkResponse> links = linkService.listAll(chatId);
+        List<LinkResponse> links = jdbcLinkService.listAll(chatId);
         return new ListLinksResponse(links, links.size());
     }
 
@@ -46,7 +46,7 @@ public class ScrapperController {
         @RequestHeader("Tg-Chat-Id") Long chatId,
         @RequestBody @Valid AddLinkRequest request
     ) {
-        return linkService.add(chatId, request.link());
+        return jdbcLinkService.add(chatId, request.link());
     }
 
     @DeleteMapping("/links")
@@ -54,6 +54,6 @@ public class ScrapperController {
         @RequestHeader("Tg-Chat-Id") Long chatId,
         @RequestBody @Valid RemoveLinkRequest request
     ) {
-        return linkService.remove(chatId, request.link());
+        return jdbcLinkService.remove(chatId, request.link());
     }
 }

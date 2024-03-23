@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 
 public class BotWebClient {
-
     private final WebClient webClient;
 
     public BotWebClient(String baseUrl) {

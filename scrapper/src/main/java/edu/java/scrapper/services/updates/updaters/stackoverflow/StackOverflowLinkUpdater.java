@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JdbcStackOverflowLinkUpdater implements LinkUpdater {
-    private final Client stackOverflowRegularWebClient;
-    private final ChatRepository chatRepository;
-    private final LinkRepository linkRepository;
+public class StackOverflowLinkUpdater implements LinkUpdater {
     private final BotWebClient botWebClient;
+    private final Client stackOverflowRegularWebClient;
+    private final ChatRepository jdbcChatRepository;
+    private final LinkRepository jdbcLinkRepository;
 
     @Override
     public int process(Link link) {
@@ -33,7 +33,7 @@ public class JdbcStackOverflowLinkUpdater implements LinkUpdater {
             stackOverflowRegularWebClient.fetchLatestModified(number);
 
         if (stackOverflowResponse.lastActivityDate().isAfter(link.lastUpdate())) {
-            List<Long> chatIds = chatRepository
+            List<Long> chatIds = jdbcChatRepository
                 .findAllChatsByUrl(link.url())
                 .stream()
                 .map(Chat::id)
@@ -49,7 +49,7 @@ public class JdbcStackOverflowLinkUpdater implements LinkUpdater {
             } catch (Exception ignored) {
             }
 
-            linkRepository.setLastUpdate(link.url(), stackOverflowResponse.lastActivityDate());
+            jdbcLinkRepository.setLastUpdate(link.url(), stackOverflowResponse.lastActivityDate());
             return 1;
         }
         return 0;
@@ -79,7 +79,7 @@ public class JdbcStackOverflowLinkUpdater implements LinkUpdater {
         Response stackOverflowResponse =
             stackOverflowRegularWebClient.fetchLatestModified(number);
 
-        linkRepository.setLastUpdate(link.url(), stackOverflowResponse.lastActivityDate());
+        jdbcLinkRepository.setLastUpdate(link.url(), stackOverflowResponse.lastActivityDate());
     }
 
     private String getDescription(Response stackOverflowResponse) {
