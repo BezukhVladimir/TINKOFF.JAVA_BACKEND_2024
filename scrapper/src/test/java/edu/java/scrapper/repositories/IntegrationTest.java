@@ -1,7 +1,5 @@
 package edu.java.scrapper.repositories;
 
-import edu.java.scrapper.repositories.chats.ChatRepository;
-import edu.java.scrapper.repositories.links.LinkRepository;
 import java.io.File;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -12,9 +10,6 @@ import liquibase.Liquibase;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.DirectoryResourceAccessor;
-import org.junit.jupiter.api.AfterEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -22,20 +17,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-@SpringBootTest
 public abstract class IntegrationTest {
     public static final PostgreSQLContainer<?> POSTGRES;
-
-    @Autowired
-    protected ChatRepository jdbcChatRepository;
-    @Autowired
-    protected LinkRepository jdbcLinkRepository;
-
-    @AfterEach
-    void clear() {
-        jdbcChatRepository.removeAll();
-        jdbcLinkRepository.removeAll();
-    }
 
     static {
         POSTGRES = new PostgreSQLContainer<>("postgres:15")
