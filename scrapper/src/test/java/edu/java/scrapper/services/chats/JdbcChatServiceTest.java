@@ -15,7 +15,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@SpringBootTest//тут тоже надо отдельно БД настроить
 class JdbcChatServiceTest {
     @Autowired
     private ChatService jdbcChatService;
