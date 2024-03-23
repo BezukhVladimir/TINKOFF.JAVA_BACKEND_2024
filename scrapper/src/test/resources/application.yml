@@ -1,0 +1,30 @@
+app:
+  scheduler:
+    enable: true
+    interval: 10000
+    removeUnusedLinksInterval: 86400
+    force-check-delay: 10000
+
+spring:
+  application:
+    name: scrapper
+  liquibase:
+    enabled: false
+
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+api:
+  bot:
+    baseUrl: http://localhost:8090
+  github:
+    baseUrl: https://api.github.com/
+  stackoverflow:
+    baseUrl: https://api.stackexchange.com/2.3/
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

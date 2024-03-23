@@ -13,6 +13,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class JooqLinkRepositoryTest extends JooqIntegrationTest {
     @Test
     void add() {
+
         // Arrange
         Long chatId = 1L;
         URI linkUrl = URI.create("https://first.com");
@@ -223,6 +224,7 @@ class JooqLinkRepositoryTest extends JooqIntegrationTest {
         // Act
         List<Link> links = jooqLinkRepository.findByOldestUpdates(2);
 
+        System.out.println(links);//чекаю  что он выбрал и всё ок
         // Assert
         assertThat(links).containsOnly(
             link3, link4
