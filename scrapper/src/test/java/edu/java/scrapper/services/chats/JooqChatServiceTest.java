@@ -15,7 +15,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest // Тут бд надо отдельно настроить чтобы заработало
+@SpringBootTest
 class JooqChatServiceTest {
     @Autowired
     private ChatService jooqChatService;
