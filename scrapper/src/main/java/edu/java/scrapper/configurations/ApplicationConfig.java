@@ -15,19 +15,19 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler
 ) {
+    @Bean
+    public DefaultConfigurationCustomizer configurationCustomizer() {
+        return (DefaultConfiguration c) -> c.settings()
+            .withRenderQuotedNames(
+                RenderQuotedNames.EXPLICIT_DEFAULT_UNQUOTED
+            );
+    }
+
     public record Scheduler(
         boolean enable,
         @NotNull Duration interval,
         @NotNull Duration forceCheckDelay,
         @NotNull Duration removeUnusedLinksInterval
     ) {
-    }
-
-    @Bean
-    public DefaultConfigurationCustomizer configurationCustomiser() {
-        return (DefaultConfiguration c) -> c.settings()
-            .withRenderQuotedNames(
-                RenderQuotedNames.EXPLICIT_DEFAULT_UNQUOTED
-            );
     }
 }
