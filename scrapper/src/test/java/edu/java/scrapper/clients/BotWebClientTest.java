@@ -7,7 +7,6 @@ import edu.java.scrapper.exceptions.ApiErrorException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +32,7 @@ public class BotWebClientTest extends AbstractWireMockTest {
         String responseBody = "Обновление обработано";
         LinkUpdateRequest request = new LinkUpdateRequest(
             1L,
-            new URI("1"),
+            URI.create("1"),
             "1",
             List.of(1L)
         );
@@ -45,11 +44,10 @@ public class BotWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<String> actualResponse = botWebClient.sendUpdate(request);
+        String actualResponse = botWebClient.sendUpdate(request);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get()).isEqualTo(responseBody);
+        assertThat(actualResponse).isEqualTo(responseBody);
     }
 
     @Test

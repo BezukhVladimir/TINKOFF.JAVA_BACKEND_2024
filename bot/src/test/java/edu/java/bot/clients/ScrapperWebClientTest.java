@@ -7,7 +7,6 @@ import edu.java.bot.api.models.RemoveLinkRequest;
 import edu.java.bot.exceptions.ApiErrorException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +24,7 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowableOfType;
 public class ScrapperWebClientTest extends AbstractWireMockTest {
     private ScrapperWebClient scrapperWebClient;
 
-    private final static String INVALID_BODY = """
+    private static final String INVALID_BODY = """
                 {
                     "description":"123",
                     "code":"400",
@@ -39,7 +38,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 }
             """;
 
-    private final static String NOT_FOUND_BODY = """
+    private static final String NOT_FOUND_BODY = """
                 {
                     "description":"123",
                     "code":"404",
@@ -53,7 +52,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 }
             """;
 
-    private final static String LINK_BODY = """
+    private static final String LINK_BODY = """
             {
                 "id":1,
                 "url":"123"
@@ -77,11 +76,10 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<String> actualResponse = scrapperWebClient.registerChat(1L);
+        String actualResponse = scrapperWebClient.registerChat(1L);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get()).isEqualTo(responseBody);
+        assertThat(actualResponse).isEqualTo(responseBody);
     }
 
     @Test
@@ -124,11 +122,10 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<String> actualResponse = scrapperWebClient.deleteChat(1L);
+        String actualResponse = scrapperWebClient.deleteChat(1L);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get()).isEqualTo(responseBody);
+        assertThat(actualResponse).isEqualTo(responseBody);
     }
 
     @Test
@@ -173,12 +170,11 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(responseBody)));
 
         // Act
-        Optional<ListLinksResponse> actualResponse = scrapperWebClient.getLinks(1L);
+        ListLinksResponse actualResponse = scrapperWebClient.getLinks(1L);
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get().size()).isEqualTo(1);
-        assertThat(actualResponse.get().links())
+        assertThat(actualResponse.size()).isEqualTo(1);
+        assertThat(actualResponse.links())
             .hasSize(1)
             .extracting(LinkResponse::id, link -> link.url().getPath())
             .containsExactly(tuple(1L, "link"));
@@ -237,14 +233,13 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(LINK_BODY)));
 
         // Act
-        Optional<LinkResponse> actualResponse = scrapperWebClient.addLink(
-            1L, new AddLinkRequest(new URI("123"))
+        LinkResponse actualResponse = scrapperWebClient.addLink(
+            1L, new AddLinkRequest(URI.create("123"))
         );
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get().id()).isEqualTo(1);
-        assertThat(actualResponse.get().url().getPath()).isEqualTo("123");
+        assertThat(actualResponse.id()).isEqualTo(1);
+        assertThat(actualResponse.url().getPath()).isEqualTo("123");
     }
 
     @Test
@@ -259,7 +254,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
 
         // Act
         Throwable actualException = catchThrowableOfType(
-            () -> scrapperWebClient.addLink(-1L, new AddLinkRequest(new URI("123"))),
+            () -> scrapperWebClient.addLink(-1L, new AddLinkRequest(URI.create("123"))),
             ApiErrorException.class
         );
 
@@ -280,7 +275,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
 
         // Act
         Throwable actualException = catchThrowableOfType(
-            () -> scrapperWebClient.addLink(1L, new AddLinkRequest(new URI(""))),
+            () -> scrapperWebClient.addLink(1L, new AddLinkRequest(URI.create(""))),
             ApiErrorException.class
         );
 
@@ -301,7 +296,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
 
         // Act
         Throwable actualException = catchThrowableOfType(
-            () -> scrapperWebClient.addLink(1L, new AddLinkRequest(new URI("123"))),
+            () -> scrapperWebClient.addLink(1L, new AddLinkRequest(URI.create("123"))),
             ApiErrorException.class
         );
 
@@ -321,14 +316,13 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
                 .withBody(LINK_BODY)));
 
         // Act
-        Optional<LinkResponse> actualResponse = scrapperWebClient.removeLink(
-            1L, new RemoveLinkRequest(new URI("123"))
+        LinkResponse actualResponse = scrapperWebClient.removeLink(
+            1L, new RemoveLinkRequest(URI.create("123"))
         );
 
         // Assert
-        assertThat(actualResponse).isPresent();
-        assertThat(actualResponse.get().id()).isEqualTo(1);
-        assertThat(actualResponse.get().url().getPath()).isEqualTo("123");
+        assertThat(actualResponse.id()).isEqualTo(1);
+        assertThat(actualResponse.url().getPath()).isEqualTo("123");
     }
 
     @Test
@@ -343,7 +337,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
 
         // Act
         Throwable actualException = catchThrowableOfType(
-            () -> scrapperWebClient.removeLink(-1L, new RemoveLinkRequest(new URI("123"))),
+            () -> scrapperWebClient.removeLink(-1L, new RemoveLinkRequest(URI.create("123"))),
             ApiErrorException.class
         );
 
@@ -364,7 +358,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
 
         // Act
         Throwable actualException = catchThrowableOfType(
-            () -> scrapperWebClient.removeLink(1L, new RemoveLinkRequest(new URI(""))),
+            () -> scrapperWebClient.removeLink(1L, new RemoveLinkRequest(URI.create(""))),
             ApiErrorException.class
         );
 
@@ -385,7 +379,7 @@ public class ScrapperWebClientTest extends AbstractWireMockTest {
 
         // Act
         Throwable actualException = catchThrowableOfType(
-            () -> scrapperWebClient.removeLink(1L, new RemoveLinkRequest(new URI("123"))),
+            () -> scrapperWebClient.removeLink(1L, new RemoveLinkRequest(URI.create("123"))),
             ApiErrorException.class
         );
 

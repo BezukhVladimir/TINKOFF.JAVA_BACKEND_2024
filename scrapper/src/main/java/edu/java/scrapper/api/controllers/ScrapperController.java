@@ -4,7 +4,8 @@ import edu.java.scrapper.api.models.AddLinkRequest;
 import edu.java.scrapper.api.models.LinkResponse;
 import edu.java.scrapper.api.models.ListLinksResponse;
 import edu.java.scrapper.api.models.RemoveLinkRequest;
-import edu.java.scrapper.services.UserService;
+import edu.java.scrapper.services.chats.ChatService;
+import edu.java.scrapper.services.links.LinkService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ScrapperController {
-    private final UserService userService;
+    private final ChatService jdbcChatService;
+    private final LinkService jdbcLinkService;
 
     @PostMapping("/tg-chat/{id}")
     public String registerChat(@PathVariable("id") Long id) {
-        userService.registerChat(id);
+        jdbcChatService.register(id);
         return "Чат зарегистрирован";
     }
 
     @DeleteMapping("/tg-chat/{id}")
     public String deleteChat(@PathVariable("id") Long id) {
-        userService.deleteChat(id);
+        jdbcChatService.unregister(id);
         return "Чат успешно удалён";
     }
 
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader("Tg-Chat-Id") Long chatId) {
-        List<LinkResponse> links = userService.getLinks(chatId);
+        List<LinkResponse> links = jdbcLinkService.listAll(chatId);
         return new ListLinksResponse(links, links.size());
     }
 
@@ -44,7 +46,7 @@ public class ScrapperController {
         @RequestHeader("Tg-Chat-Id") Long chatId,
         @RequestBody @Valid AddLinkRequest request
     ) {
-        return userService.addLink(chatId, request.link());
+        return jdbcLinkService.add(chatId, request.link());
     }
 
     @DeleteMapping("/links")
@@ -52,6 +54,6 @@ public class ScrapperController {
         @RequestHeader("Tg-Chat-Id") Long chatId,
         @RequestBody @Valid RemoveLinkRequest request
     ) {
-        return userService.removeLink(chatId, request.link());
+        return jdbcLinkService.remove(chatId, request.link());
     }
 }

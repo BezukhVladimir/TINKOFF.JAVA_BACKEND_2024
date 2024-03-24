@@ -6,7 +6,6 @@ import edu.java.bot.api.models.LinkResponse;
 import edu.java.bot.api.models.ListLinksResponse;
 import edu.java.bot.api.models.RemoveLinkRequest;
 import edu.java.bot.exceptions.ApiErrorException;
-import java.util.Optional;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -21,7 +20,7 @@ public class ScrapperWebClient {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 
-    public Optional<String> registerChat(Long id) {
+    public String registerChat(Long id) {
         return webClient
             .post()
             .uri(uriBuilder -> uriBuilder.path(PATH_TO_CHAT).build(id))
@@ -31,10 +30,10 @@ public class ScrapperWebClient {
                     .bodyToMono(ApiErrorResponse.class)
                     .flatMap(errorResponse -> Mono.error(new ApiErrorException(errorResponse))))
             .bodyToMono(String.class)
-            .blockOptional();
+            .block();
     }
 
-    public Optional<String> deleteChat(Long id) {
+    public String deleteChat(Long id) {
         return webClient
             .delete()
             .uri(uriBuilder -> uriBuilder.path(PATH_TO_CHAT).build(id))
@@ -44,10 +43,10 @@ public class ScrapperWebClient {
                     .bodyToMono(ApiErrorResponse.class)
                     .flatMap(errorResponse -> Mono.error(new ApiErrorException(errorResponse))))
             .bodyToMono(String.class)
-            .blockOptional();
+            .block();
     }
 
-    public Optional<ListLinksResponse> getLinks(Long id) {
+    public ListLinksResponse getLinks(Long id) {
         return webClient
             .get()
             .uri(PATH_TO_LINK)
@@ -58,10 +57,10 @@ public class ScrapperWebClient {
                     .bodyToMono(ApiErrorResponse.class)
                     .flatMap(errorResponse -> Mono.error(new ApiErrorException(errorResponse))))
             .bodyToMono(ListLinksResponse.class)
-            .blockOptional();
+            .block();
     }
 
-    public Optional<LinkResponse> addLink(Long id, AddLinkRequest request) {
+    public LinkResponse addLink(Long id, AddLinkRequest request) {
         return webClient
             .post()
             .uri(PATH_TO_LINK)
@@ -73,10 +72,10 @@ public class ScrapperWebClient {
                     .bodyToMono(ApiErrorResponse.class)
                     .flatMap(errorResponse -> Mono.error(new ApiErrorException(errorResponse))))
             .bodyToMono(LinkResponse.class)
-            .blockOptional();
+            .block();
     }
 
-    public Optional<LinkResponse> removeLink(Long id, RemoveLinkRequest request) {
+    public LinkResponse removeLink(Long id, RemoveLinkRequest request) {
         return webClient.method(HttpMethod.DELETE)
             .uri(PATH_TO_LINK)
             .header(HEADER_NAME, String.valueOf(id))
@@ -87,10 +86,10 @@ public class ScrapperWebClient {
                     .bodyToMono(ApiErrorResponse.class)
                     .flatMap(errorResponse -> Mono.error(new ApiErrorException(errorResponse))))
             .bodyToMono(LinkResponse.class)
-            .blockOptional();
+            .block();
     }
 
-    private final static String PATH_TO_CHAT = "tg-chat/{id}";
-    private final static String PATH_TO_LINK = "/links";
-    private final static String HEADER_NAME = "Tg-Chat-Id";
+    private static final String PATH_TO_CHAT = "tg-chat/{id}";
+    private static final String PATH_TO_LINK = "/links";
+    private static final String HEADER_NAME = "Tg-Chat-Id";
 }
