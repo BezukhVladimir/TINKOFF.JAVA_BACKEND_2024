@@ -1,12 +1,12 @@
-package edu.java.scrapper.repositories.links;
+package edu.java.scrapper.repositories.jooq;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.JooqIntegrationTest;
 import java.net.URI;
 import java.util.List;
+import org.jooq.exception.IntegrityConstraintViolationException;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DuplicateKeyException;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -44,7 +44,7 @@ class JooqLinkRepositoryTest extends JooqIntegrationTest {
         });
 
         // Assert
-        assertThat(thrown).isInstanceOf(DuplicateKeyException.class);
+        assertThat(thrown).isInstanceOf(IntegrityConstraintViolationException.class);
     }
 
     @Test
@@ -57,7 +57,7 @@ class JooqLinkRepositoryTest extends JooqIntegrationTest {
         Link addedLink = jooqLinkRepository.add(chatId, linkUrl);
 
         // Act
-        jooqLinkRepository.remove(addedLink.id());
+        jooqLinkRepository.remove(addedLink.getId());
         List<Link> links = jooqLinkRepository.findAll();
 
         // Assert

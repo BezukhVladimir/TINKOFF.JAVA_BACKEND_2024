@@ -1,4 +1,4 @@
-package edu.java.scrapper.repositories.links;
+package edu.java.scrapper.repositories;
 
 
 import edu.java.scrapper.models.Link;

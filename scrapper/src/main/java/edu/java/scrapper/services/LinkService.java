@@ -1,4 +1,4 @@
-package edu.java.scrapper.services.links;
+package edu.java.scrapper.services;
 
 import edu.java.scrapper.api.models.LinkResponse;
 import edu.java.scrapper.exceptions.BadRequestException;
@@ -6,8 +6,8 @@ import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.exceptions.NotFoundException;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.models.LinkPatterns;
-import edu.java.scrapper.repositories.chats.ChatRepository;
-import edu.java.scrapper.repositories.links.LinkRepository;
+import edu.java.scrapper.repositories.ChatRepository;
+import edu.java.scrapper.repositories.LinkRepository;
 import edu.java.scrapper.services.updates.LinkHolder;
 import edu.java.scrapper.services.updates.updaters.LinkUpdater;
 import edu.java.scrapper.utils.LinkUtils;
@@ -23,14 +23,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @SuppressWarnings({"MultipleStringLiterals"})
-public class JdbcLinkService implements LinkService {
-    private final ChatRepository jdbcChatRepository;
-    private final LinkRepository jdbcLinkRepository;
+public class LinkService {
+    private final ChatRepository chatRepository;
+    private final LinkRepository linkRepository;
     private final LinkHolder linkHolder;
 
     public LinkResponse add(Long chatId, URI url) {
         try {
-            jdbcChatRepository.findById(chatId);
+            chatRepository.findById(chatId);
         } catch (DataAccessException e) {
             throw new NotFoundException(
                 "Чат не был зарегистрирован",
@@ -48,7 +48,7 @@ public class JdbcLinkService implements LinkService {
         Link link;
 
         try {
-            link = jdbcLinkRepository.add(chatId, url);
+            link = linkRepository.add(chatId, url);
         } catch (DuplicateKeyException e) {
             throw new BadRequestException(
                 "Ссылка уже отслеживается",
@@ -56,7 +56,7 @@ public class JdbcLinkService implements LinkService {
             );
         }
 
-        if (link.lastUpdate().equals(OffsetDateTime.MIN)) {
+        if (link.getLastUpdate().equals(OffsetDateTime.MIN)) {
             String domain = LinkUtils.extractDomainFromUrl(url);
 
             LinkUpdater updater = linkHolder.getUpdaterByDomain(domain);
@@ -69,7 +69,7 @@ public class JdbcLinkService implements LinkService {
 
     public LinkResponse remove(Long chatId, URI url) {
         try {
-            jdbcChatRepository.findById(chatId);
+            chatRepository.findById(chatId);
         } catch (DataAccessException e) {
             throw new NotFoundException(
                 "Чат не был зарегистрирован",
@@ -78,7 +78,7 @@ public class JdbcLinkService implements LinkService {
         }
 
         try {
-            jdbcLinkRepository.remove(chatId, url);
+            linkRepository.remove(chatId, url);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(
                 "Ссылка отсутствует",
@@ -86,11 +86,11 @@ public class JdbcLinkService implements LinkService {
             );
         }
 
-        return mapToLinkResponse(new Link(chatId, url, OffsetDateTime.now()));
+        return mapToLinkResponse(new Link().setId(chatId).setUrl(url).setLastUpdate(OffsetDateTime.now()));
     }
 
     public List<LinkResponse> listAll(Long chatId) {
-        return jdbcLinkRepository.findAllLinksByChatId(chatId)
+        return linkRepository.findAllLinksByChatId(chatId)
             .stream()
             .map(this::mapToLinkResponse)
             .toList();
@@ -108,7 +108,7 @@ public class JdbcLinkService implements LinkService {
 
     private LinkResponse mapToLinkResponse(Link link) {
         try {
-            return new LinkResponse(link.id(), link.url());
+            return new LinkResponse(link.getId(), link.getUrl());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

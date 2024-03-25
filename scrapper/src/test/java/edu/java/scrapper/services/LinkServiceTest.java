@@ -1,11 +1,11 @@
-package edu.java.scrapper.services.links;
+package edu.java.scrapper.services;
 
 import edu.java.scrapper.api.models.LinkResponse;
 import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.NotFoundException;
 import edu.java.scrapper.models.Link;
-import edu.java.scrapper.repositories.chats.ChatRepository;
-import edu.java.scrapper.repositories.links.LinkRepository;
+import edu.java.scrapper.repositories.ChatRepository;
+import edu.java.scrapper.repositories.LinkRepository;
 import edu.java.scrapper.services.updates.LinkHolder;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,32 +24,32 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class JdbcLinkServiceTest {
+class LinkServiceTest {
+    @InjectMocks
+    private LinkService linkService;
     @Mock
-    private ChatRepository jdbcChatRepository;
+    private ChatRepository chatRepository;
     @Mock
-    private LinkRepository jdbcLinkRepository;
+    private LinkRepository linkRepository;
     @Mock
     private LinkHolder linkHolder;
-    @InjectMocks
-    private JdbcLinkService jdbcLinkService;
 
     @Test
     public void listAll() {
         // Arrange
-        Link link1 = new Link(1L, URI.create(""), OffsetDateTime.now());
-        Link link2 = new Link(2L, URI.create(""), OffsetDateTime.now());
-        Link link3 = new Link(3L, URI.create(""), OffsetDateTime.now());
+        Link link1 = new Link().setId(1L).setUrl(URI.create("")).setLastUpdate(OffsetDateTime.now());
+        Link link2 = new Link().setId(2L).setUrl(URI.create("")).setLastUpdate(OffsetDateTime.now());
+        Link link3 = new Link().setId(3L).setUrl(URI.create("")).setLastUpdate(OffsetDateTime.now());
 
-        when(jdbcLinkRepository.findAllLinksByChatId(1L))
+        when(linkRepository.findAllLinksByChatId(1L))
             .thenReturn(List.of(link1, link2, link3));
 
         // Act
-        List<LinkResponse> links = jdbcLinkService.listAll(1L);
+        List<LinkResponse> links = linkService.listAll(1L);
 
         // Assert
         assertThat(links).hasSize(3);
-        verify(jdbcLinkRepository).findAllLinksByChatId(1L);
+        verify(linkRepository).findAllLinksByChatId(1L);
     }
 
     @Test
@@ -57,12 +57,12 @@ class JdbcLinkServiceTest {
         // Arrange
         Long chatId = 1L;
         URI url = URI.create("https://github.com/author/repo");
-        when(jdbcChatRepository.findById(chatId))
+        when(chatRepository.findById(chatId))
             .thenThrow(new DataIntegrityViolationException(""));
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jdbcLinkService.add(chatId, url);
+            linkService.add(chatId, url);
         });
 
         // Assert
@@ -79,7 +79,7 @@ class JdbcLinkServiceTest {
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jdbcLinkService.add(chatId, url);
+            linkService.add(chatId, url);
         });
 
         // Assert
@@ -93,12 +93,12 @@ class JdbcLinkServiceTest {
         // Arrange
         Long chatId = 1L;
         URI url = URI.create("https://github.com/author/repo");
-        when(jdbcLinkRepository.add(chatId, url))
+        when(linkRepository.add(chatId, url))
             .thenThrow(new DuplicateKeyException(""));
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jdbcLinkService.add(chatId, url);
+            linkService.add(chatId, url);
         });
 
         // Assert
@@ -112,11 +112,11 @@ class JdbcLinkServiceTest {
         // Arrange
         Long chatId = 1L;
         URI url = URI.create("https://github.com/author/repo");
-        when(jdbcLinkRepository.add(chatId, url))
-            .thenReturn(new Link(chatId, url, OffsetDateTime.now()));
+        when(linkRepository.add(chatId, url))
+            .thenReturn(new Link().setId(chatId).setUrl(url).setLastUpdate(OffsetDateTime.now()));
 
         // Act
-        LinkResponse link = jdbcLinkService.add(chatId, url);
+        LinkResponse link = linkService.add(chatId, url);
 
         // Assert
         assertThat(link.id()).isEqualTo(chatId);
@@ -128,13 +128,13 @@ class JdbcLinkServiceTest {
         // Arrange
         Long chatId = 1L;
         URI url = URI.create("https://github.com/author/repo");
-        when(jdbcChatRepository.findById(chatId))
+        when(chatRepository.findById(chatId))
             .thenThrow(new DataIntegrityViolationException(""));
 
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jdbcLinkService.add(chatId, url);
+            linkService.add(chatId, url);
         });
 
         // Assert
@@ -150,12 +150,12 @@ class JdbcLinkServiceTest {
         URI url = URI.create("https://github.com/author/repo");
 
         // Act
-        LinkResponse link = jdbcLinkService.remove(chatId, url);
+        LinkResponse link = linkService.remove(chatId, url);
 
 
         // Assert
         assertThat(link.id()).isEqualTo(chatId);
         assertThat(link.url()).isEqualTo(url);
-        verify(jdbcLinkRepository).remove(chatId, url);
+        verify(linkRepository).remove(chatId, url);
     }
 }

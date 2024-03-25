@@ -1,34 +1,34 @@
-package edu.java.scrapper.services.chats;
+package edu.java.scrapper.services;
 
 import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.exceptions.NotFoundException;
-import edu.java.scrapper.repositories.chats.ChatRepository;
-import edu.java.scrapper.repositories.chats.JdbcChatRepository;
+import edu.java.scrapper.repositories.ChatRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DuplicateKeyException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-class JdbcChatServiceTest {
-    @Autowired
-    private ChatService jdbcChatService;
-    @MockBean(JdbcChatRepository.class)
-    private ChatRepository jdbcChatRepository;
+@ExtendWith(MockitoExtension.class)
+class ChatServiceTest {
+    @InjectMocks
+    private ChatService chatService;
+    @Mock
+    private ChatRepository chatRepository;
 
     @Test
     public void register() {
         // Act
-        jdbcChatService.register(1L);
+        chatService.register(1L);
 
         // Assert
-        verify(jdbcChatRepository).add(1L);
+        verify(chatRepository).add(1L);
     }
 
     @Test
@@ -36,11 +36,11 @@ class JdbcChatServiceTest {
         // Arrange
         doAnswer(invocation -> {
             throw new DuplicateKeyException("");
-        }).when(jdbcChatRepository).add(1L);
+        }).when(chatRepository).add(1L);
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jdbcChatService.register(1L);
+            chatService.register(1L);
         });
 
         // Assert
@@ -52,10 +52,10 @@ class JdbcChatServiceTest {
     @Test
     public void unregister() {
         // Act
-        jdbcChatService.unregister(1L);
+        chatService.unregister(1L);
 
         // Assert
-        verify(jdbcChatRepository).remove(1L);
+        verify(chatRepository).remove(1L);
     }
 
     @Test
@@ -63,11 +63,11 @@ class JdbcChatServiceTest {
         // Arrange
         doAnswer(invocation -> {
             throw new EntityNotFoundException("");
-        }).when(jdbcChatRepository).remove(1L);
+        }).when(chatRepository).remove(1L);
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jdbcChatService.unregister(1L);
+            chatService.unregister(1L);
         });
 
         // Assert

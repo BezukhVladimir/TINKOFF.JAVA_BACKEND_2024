@@ -1,18 +1,17 @@
-package edu.java.scrapper.repositories.links;
+package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Link;
+import edu.java.scrapper.repositories.LinkRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Repository
 @RequiredArgsConstructor
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcLinkRepository implements LinkRepository {
@@ -42,7 +41,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 INSERT INTO link_tracker_db.chats_links (id_chat, id_link)
                 VALUES (?, ?)
                 """,
-            chatId, addedLink.id()
+            chatId, addedLink.getId()
         );
 
         return addedLink;
@@ -113,10 +112,10 @@ public class JdbcLinkRepository implements LinkRepository {
               FROM link_tracker_db.link
              WHERE url = ?
             """,
-            (rs, rowNum) -> new Link(
-                rs.getLong("id"),
-                URI.create(rs.getString("url")),
-                rs.getObject("last_update", OffsetDateTime.class)
+            (rs, rowNum) -> new Link()
+                .setId(rs.getLong("id"))
+                .setUrl(URI.create(rs.getString("url")))
+                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
             ),
             url.toString()
         );
@@ -129,10 +128,10 @@ public class JdbcLinkRepository implements LinkRepository {
             SELECT *
               FROM link_tracker_db.link
             """,
-            (rs, rowNum) -> new Link(
-                rs.getLong("id"),
-                URI.create(rs.getString("url")),
-                rs.getObject("last_update", OffsetDateTime.class)
+            (rs, rowNum) -> new Link()
+                .setId(rs.getLong("id"))
+                .setUrl(URI.create(rs.getString("url")))
+                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
             )
         );
     }
@@ -147,10 +146,10 @@ public class JdbcLinkRepository implements LinkRepository {
                 ON l.id = cl.id_link
              WHERE cl.id_chat = ?
             """,
-            (rs, rowNum) -> new Link(
-                rs.getLong("id"),
-                URI.create(rs.getString("url")),
-                rs.getObject("last_update", OffsetDateTime.class)
+            (rs, rowNum) -> new Link()
+                .setId(rs.getLong("id"))
+                .setUrl(URI.create(rs.getString("url")))
+                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
             ),
             chatId
         );
@@ -165,10 +164,10 @@ public class JdbcLinkRepository implements LinkRepository {
              ORDER BY last_update
              LIMIT ?
             """,
-            (rs, rowNum) -> new Link(
-                rs.getLong("id"),
-                URI.create(rs.getString("url")),
-                rs.getObject("last_update", OffsetDateTime.class)
+            (rs, rowNum) -> new Link()
+                .setId(rs.getLong("id"))
+                .setUrl(URI.create(rs.getString("url")))
+                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
             ),
             count
         );

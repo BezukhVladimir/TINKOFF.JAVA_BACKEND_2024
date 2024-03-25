@@ -1,7 +1,8 @@
-package edu.java.scrapper.repositories.chats;
+package edu.java.scrapper.repositories.jooq;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Chat;
+import edu.java.scrapper.repositories.ChatRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -9,13 +10,12 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import static edu.java.scrapper.repositories.jooq.link_tracker_db.tables.Chat.CHAT;
 import static edu.java.scrapper.repositories.jooq.link_tracker_db.tables.ChatsLinks.CHATS_LINKS;
 import static edu.java.scrapper.repositories.jooq.link_tracker_db.tables.Link.LINK;
 
-@Repository
+
 @RequiredArgsConstructor
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JooqChatRepository implements ChatRepository {
@@ -55,20 +55,20 @@ public class JooqChatRepository implements ChatRepository {
         return Objects.requireNonNull(dslContext.selectFrom(CHAT)
                 .where(CHAT.ID.eq(id))
                 .fetchOne())
-            .map(r -> new Chat(
-                r.get(CHAT.ID),
-                r.get(CHAT.CREATED_AT)
-            ));
+            .map(r -> new Chat()
+                .setId(r.get(CHAT.ID))
+                .setCreatedAt(r.get(CHAT.CREATED_AT))
+            );
     }
 
     @Override
     public List<Chat> findAll() {
         return dslContext.selectFrom(CHAT)
             .fetch()
-            .map(r -> new Chat(
-                r.get(CHAT.ID),
-                r.get(CHAT.CREATED_AT)
-            ));
+            .map(r -> new Chat()
+                .setId(r.get(CHAT.ID))
+                .setCreatedAt(r.get(CHAT.CREATED_AT))
+            );
     }
 
     @Override
@@ -79,9 +79,9 @@ public class JooqChatRepository implements ChatRepository {
             .join(LINK).on(CHATS_LINKS.ID_LINK.eq(LINK.ID))
             .where(LINK.URL.eq(url.toString()))
             .fetch()
-            .map(r -> new Chat(
-                r.get(CHAT.ID),
-                r.get(CHAT.CREATED_AT)
-            ));
+            .map(r -> new Chat()
+                .setId(r.get(CHAT.ID))
+                .setCreatedAt(r.get(CHAT.CREATED_AT))
+            );
     }
 }

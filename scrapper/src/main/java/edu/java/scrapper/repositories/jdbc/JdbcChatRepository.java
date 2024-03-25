@@ -1,18 +1,17 @@
-package edu.java.scrapper.repositories.chats;
+package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Chat;
+import edu.java.scrapper.repositories.ChatRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Repository
 @RequiredArgsConstructor
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcChatRepository implements ChatRepository {
@@ -66,9 +65,9 @@ public class JdbcChatRepository implements ChatRepository {
               FROM link_tracker_db.chat
              WHERE id = ?
             """,
-            (rs, rowNum) -> new Chat(
-                rs.getLong("id"),
-                rs.getObject("created_at", OffsetDateTime.class)
+            (rs, rowNum) -> new Chat()
+                .setId(rs.getLong("id"))
+                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class)
             ),
             id
         );
@@ -81,9 +80,9 @@ public class JdbcChatRepository implements ChatRepository {
                 SELECT *
                   FROM link_tracker_db.chat
                 """,
-            (rs, rowNum) -> new Chat(
-                rs.getLong("id"),
-                rs.getObject("created_at", OffsetDateTime.class)
+            (rs, rowNum) -> new Chat()
+                .setId(rs.getLong("id"))
+                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class)
             )
         );
     }
@@ -98,9 +97,9 @@ public class JdbcChatRepository implements ChatRepository {
               JOIN link_tracker_db.link l ON cl.id_link = l.id
              WHERE l.url = ?
              """,
-            (rs, rowNum) -> new Chat(
-                rs.getLong("id"),
-                rs.getObject("created_at", OffsetDateTime.class)
+            (rs, rowNum) -> new Chat()
+                .setId(rs.getLong("id"))
+                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class)
             ),
             url.toString()
         );

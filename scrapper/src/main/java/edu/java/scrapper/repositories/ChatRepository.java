@@ -1,4 +1,4 @@
-package edu.java.scrapper.repositories.chats;
+package edu.java.scrapper.repositories;
 
 import edu.java.scrapper.models.Chat;
 import java.net.URI;

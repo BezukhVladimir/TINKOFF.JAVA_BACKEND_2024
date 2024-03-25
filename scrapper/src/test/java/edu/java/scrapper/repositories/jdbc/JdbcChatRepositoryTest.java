@@ -1,9 +1,9 @@
-package edu.java.scrapper.repositories.chats;
+package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.models.Link;
-import edu.java.scrapper.repositories.JooqIntegrationTest;
+import edu.java.scrapper.repositories.JdbcIntegrationTest;
 import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -12,15 +12,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
-class JooqChatRepositoryTest extends JooqIntegrationTest {
+class JdbcChatRepositoryTest extends JdbcIntegrationTest {
     @Test
     void add() {
         // Arrange
         Long chatId = 1L;
 
         // Act
-        Chat chat1 = jooqChatRepository.add(chatId);
-        List<Chat> chats = jooqChatRepository.findAll();
+        Chat chat1 = jdbcChatRepository.add(chatId);
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).containsOnly(chat1);
@@ -30,11 +30,11 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
     void addDuplicate() {
         // Arrange
         Long chatId = 1L;
-        jooqChatRepository.add(chatId);
+        jdbcChatRepository.add(chatId);
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jooqChatRepository.add(chatId);
+            jdbcChatRepository.add(chatId);
         });
 
         // Assert
@@ -45,11 +45,11 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
     void remove() {
         // Arrange
         Long chatId = 1L;
-        jooqChatRepository.add(chatId);
+        jdbcChatRepository.add(chatId);
 
         // Act
-        jooqChatRepository.remove(chatId);
-        List<Chat> chats = jooqChatRepository.findAll();
+        jdbcChatRepository.remove(chatId);
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).isEmpty();
@@ -62,7 +62,7 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
 
         // Act
         Throwable thrown = catchThrowable(() -> {
-            jooqChatRepository.remove(chatId);
+            jdbcChatRepository.remove(chatId);
         });
 
         // Assert
@@ -77,17 +77,17 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
         URI link1Url = URI.create("https://first.com");
         URI link2Url = URI.create("https://second.com");
 
-        jooqChatRepository.add(chat1Id);
-        jooqChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat1Id);
+        jdbcChatRepository.add(chat2Id);
 
-        jooqLinkRepository.add(chat1Id, link1Url);
-        jooqLinkRepository.add(chat1Id, link2Url);
-        Link link21 = jooqLinkRepository.add(chat2Id, link1Url);
-        Link link22 = jooqLinkRepository.add(chat2Id, link2Url);
+        jdbcLinkRepository.add(chat1Id, link1Url);
+        jdbcLinkRepository.add(chat1Id, link2Url);
+        Link link21 = jdbcLinkRepository.add(chat2Id, link1Url);
+        Link link22 = jdbcLinkRepository.add(chat2Id, link2Url);
 
         // Act
-        jooqChatRepository.remove(chat1Id);
-        List<Link> links = jooqLinkRepository.findAll();
+        jdbcChatRepository.remove(chat1Id);
+        List<Link> links = jdbcLinkRepository.findAll();
 
         // Assert
         assertThat(links).containsOnly(
@@ -102,13 +102,13 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
         Long chat2Id = 2L;
         Long chat3Id = 3L;
 
-        jooqChatRepository.add(chat1Id);
-        jooqChatRepository.add(chat2Id);
-        jooqChatRepository.add(chat3Id);
+        jdbcChatRepository.add(chat1Id);
+        jdbcChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat3Id);
 
         // Act
-        jooqChatRepository.removeAll();
-        List<Chat> chats = jooqChatRepository.findAll();
+        jdbcChatRepository.removeAll();
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).isEmpty();
@@ -121,12 +121,12 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
         Long chat2Id = 2L;
         Long chat3Id = 3L;
 
-        Chat expectedChat1 = jooqChatRepository.add(chat1Id);
-        jooqChatRepository.add(chat2Id);
-        jooqChatRepository.add(chat3Id);
+        Chat expectedChat1 = jdbcChatRepository.add(chat1Id);
+        jdbcChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat3Id);
 
         // Act
-        Chat actualChat1 = jooqChatRepository.findById(chat1Id);
+        Chat actualChat1 = jdbcChatRepository.findById(chat1Id);
 
         // Assert
         assertThat(actualChat1).isEqualTo(expectedChat1);
@@ -139,12 +139,12 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
         Long chat2Id = 2L;
         Long chat3Id = 3L;
 
-        Chat chat1 = jooqChatRepository.add(chat1Id);
-        Chat chat2 = jooqChatRepository.add(chat2Id);
-        Chat chat3 = jooqChatRepository.add(chat3Id);
+        Chat chat1 = jdbcChatRepository.add(chat1Id);
+        Chat chat2 = jdbcChatRepository.add(chat2Id);
+        Chat chat3 = jdbcChatRepository.add(chat3Id);
 
         // Act
-        List<Chat> chats = jooqChatRepository.findAll();
+        List<Chat> chats = jdbcChatRepository.findAll();
 
         // Assert
         assertThat(chats).containsOnly(
@@ -162,17 +162,17 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
         URI link2Url = URI.create("https://second.com");
         URI link3Url = URI.create("https://third.com");
 
-        Chat chat1 = jooqChatRepository.add(chat1Id);
-        Chat chat2 = jooqChatRepository.add(chat2Id);
-        jooqChatRepository.add(chat3Id);
+        Chat chat1 = jdbcChatRepository.add(chat1Id);
+        Chat chat2 = jdbcChatRepository.add(chat2Id);
+        jdbcChatRepository.add(chat3Id);
 
-        jooqLinkRepository.add(chat1Id, link1Url);
-        jooqLinkRepository.add(chat2Id, link1Url);
-        jooqLinkRepository.add(chat2Id, link2Url);
-        jooqLinkRepository.add(chat3Id, link3Url);
+        jdbcLinkRepository.add(chat1Id, link1Url);
+        jdbcLinkRepository.add(chat2Id, link1Url);
+        jdbcLinkRepository.add(chat2Id, link2Url);
+        jdbcLinkRepository.add(chat3Id, link3Url);
 
         // Act
-        List<Chat> chats = jooqChatRepository.findAllChatsByUrl(link1Url);
+        List<Chat> chats = jdbcChatRepository.findAllChatsByUrl(link1Url);
 
         // Assert
         assertThat(chats).containsOnly(

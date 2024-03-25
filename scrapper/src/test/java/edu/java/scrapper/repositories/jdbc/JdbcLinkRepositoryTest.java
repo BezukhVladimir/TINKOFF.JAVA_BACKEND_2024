@@ -1,4 +1,4 @@
-package edu.java.scrapper.repositories.links;
+package edu.java.scrapper.repositories.jdbc;
 
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Link;
@@ -57,7 +57,7 @@ class JdbcLinkRepositoryTest extends JdbcIntegrationTest {
         Link addedLink = jdbcLinkRepository.add(chatId, linkUrl);
 
         // Act
-        jdbcLinkRepository.remove(addedLink.id());
+        jdbcLinkRepository.remove(addedLink.getId());
         List<Link> links = jdbcLinkRepository.findAll();
 
         // Assert

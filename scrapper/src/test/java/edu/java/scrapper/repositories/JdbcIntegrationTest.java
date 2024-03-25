@@ -1,17 +1,22 @@
 package edu.java.scrapper.repositories;
 
-import edu.java.scrapper.repositories.chats.ChatRepository;
-import edu.java.scrapper.repositories.links.LinkRepository;
+import edu.java.scrapper.repositories.jdbc.JdbcChatRepository;
+import edu.java.scrapper.repositories.jdbc.JdbcLinkRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.BeforeAll;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-@SpringBootTest
 public class JdbcIntegrationTest extends IntegrationTest {
-    @Autowired
-    protected ChatRepository jdbcChatRepository;
-    @Autowired
-    protected LinkRepository jdbcLinkRepository;
+    protected static JdbcTemplate jdbcTemplate;
+    protected static JdbcChatRepository jdbcChatRepository;
+    protected static JdbcLinkRepository jdbcLinkRepository;
+
+    @BeforeAll
+    static void setUp() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcChatRepository = new JdbcChatRepository(jdbcTemplate);
+        jdbcLinkRepository = new JdbcLinkRepository(jdbcTemplate);
+    }
 
     @AfterEach
     void clear() {
