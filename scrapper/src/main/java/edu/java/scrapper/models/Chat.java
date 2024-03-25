@@ -28,6 +28,7 @@ public class Chat {
 
     @ManyToMany
     @JoinTable(
+        schema = "link_tracker_db",
         name = "chats_links",
         joinColumns =        @JoinColumn(name = "id_chat"),
         inverseJoinColumns = @JoinColumn(name = "id_link")

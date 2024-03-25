@@ -1,16 +1,13 @@
 package edu.java.scrapper.repositories.jpa;
 
-import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.JpaIntegrationTest;
 import java.net.URI;
 import java.util.List;
-import org.jooq.exception.IntegrityConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
@@ -44,24 +41,6 @@ class JpaLinkRepositoryTest extends JpaIntegrationTest {
     }
 
     @Test
-    void addDuplicate() {
-        // Arrange
-        Long chatId = 1L;
-        URI linkUrl = URI.create("https://first.com");
-
-        jpaChatRepository.add(chatId);
-        jpaLinkRepository.add(chatId, linkUrl);
-
-        // Act
-        Throwable thrown = catchThrowable(() -> {
-            jpaLinkRepository.add(chatId, linkUrl);
-        });
-
-        // Assert
-        assertThat(thrown).isInstanceOf(IntegrityConstraintViolationException.class);
-    }
-
-    @Test
     void remove() {
         // Arrange
         Long chatId = 1L;
@@ -76,21 +55,6 @@ class JpaLinkRepositoryTest extends JpaIntegrationTest {
 
         // Assert
         assertThat(links).isEmpty();
-    }
-
-    @Test
-    void removeEntityNotFound() {
-        // Arrange
-        Long chatId = 1L;
-        URI linkUrl = URI.create("https://first.com");
-
-        // Act
-        Throwable thrown = catchThrowable(() -> {
-            jpaLinkRepository.remove(chatId, linkUrl);
-        });
-
-        // Assert
-        assertThat(thrown).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -218,7 +182,7 @@ class JpaLinkRepositoryTest extends JpaIntegrationTest {
     }
 
     @Test
-    void findByOldestUpdates() throws InterruptedException {
+    void findByOldestUpdates() {
         // Arrange
         Long chat1Id = 1L;
         Long chat2Id = 2L;

@@ -5,6 +5,7 @@ import edu.java.scrapper.repositories.LinkRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +20,19 @@ public class JpaLinkRepository implements LinkRepository {
     @Transactional
     public Link add(Long chatId, URI url) {
         Link addedLink;
+        Link existingLink;
 
         try {
-            addedLink = findByUrl(url);
+            existingLink = findByUrl(url);
         } catch (DataAccessException e) {
-            addedLink = jpaLinkRepositoryInterface.save(new Link().setUrl(url).setLastUpdate(OffsetDateTime.now()));
+            existingLink = null;
         }
 
-        jpaLinkRepositoryInterface.insert(chatId, addedLink.getId());
+        addedLink = Objects.requireNonNullElseGet(existingLink, () -> jpaLinkRepositoryInterface.save(
+            new Link().setUrl(url).setLastUpdate(OffsetDateTime.now())
+        ));
+
+        jpaLinkRepositoryInterface.saveByChatIdAndLinkId(chatId, addedLink.getId());
 
         return addedLink;
     }
@@ -34,13 +40,13 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public void remove(Long linkId) {
-        jpaLinkRepositoryInterface.remove(linkId);
+        jpaLinkRepositoryInterface.deleteById(linkId);
     }
 
     @Override
     @Transactional
     public void remove(Long chatId, URI url) {
-        jpaLinkRepositoryInterface.remove(chatId, url);
+        jpaLinkRepositoryInterface.remove(chatId, url.toString());
     }
 
     @Override
@@ -71,11 +77,11 @@ public class JpaLinkRepository implements LinkRepository {
 
     @Override
     public List<Link> findByOldestUpdates(int count) {
-        return jpaLinkRepositoryInterface.findByOldestUpdates(count);
+        return jpaLinkRepositoryInterface.findTopNByOrderByLastUpdateAsc(count);
     }
 
     @Override
     public void setLastUpdate(URI url, OffsetDateTime time) {
-        jpaLinkRepositoryInterface.setLastUpdate(url, time);
+        jpaLinkRepositoryInterface.setLastUpdateByUrl(url, time);
     }
 }

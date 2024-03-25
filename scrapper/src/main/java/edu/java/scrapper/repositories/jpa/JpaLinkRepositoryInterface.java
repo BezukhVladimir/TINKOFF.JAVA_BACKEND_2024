@@ -4,6 +4,7 @@ import edu.java.scrapper.models.Link;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,14 +16,9 @@ public interface JpaLinkRepositoryInterface extends JpaRepository<Link, Long> {
         INSERT INTO link_tracker_db.chats_links (id_chat, id_link)
         VALUES (:chatId, :linkId)
     """, nativeQuery = true)
-    void insert(Long chatId, Long linkId);
+    void saveByChatIdAndLinkId(Long chatId, Long linkId);
 
-    @Modifying
-    @Query(value = """
-        DELETE FROM link_tracker_db.link l
-         WHERE l.id = :linkId
-    """, nativeQuery = true)
-    void remove(Long linkId);
+    void deleteById(@NotNull Long linkId);
 
     @Modifying
     @Query(value = """
@@ -32,7 +28,7 @@ public interface JpaLinkRepositoryInterface extends JpaRepository<Link, Long> {
            AND cl.id_link = l.id
            AND l.url = :url
     """, nativeQuery = true)
-    void remove(Long chatId, URI url);
+    void remove(Long chatId, String url);
 
     @Modifying
     @Query(value = """
@@ -42,11 +38,6 @@ public interface JpaLinkRepositoryInterface extends JpaRepository<Link, Long> {
     """, nativeQuery = true)
     void removeUnusedLinks();
 
-    @Query(value = """
-        SELECT *
-         FROM link_tracker_db.link
-        WHERE url = :url
-    """, nativeQuery = true)
     Link findByUrl(URI url);
 
     @Query(value = """
@@ -60,11 +51,11 @@ public interface JpaLinkRepositoryInterface extends JpaRepository<Link, Long> {
 
     @Query(value = """
         SELECT *
-          FROM link
-         ORDER BY lastUpdate
+          FROM link_tracker_db.link
+         ORDER BY last_update
          LIMIT :count
      """, nativeQuery = true)
-    List<Link> findByOldestUpdates(int count);
+    List<Link> findTopNByOrderByLastUpdateAsc(int count);
 
     @Modifying
     @Query(value = """
@@ -72,5 +63,5 @@ public interface JpaLinkRepositoryInterface extends JpaRepository<Link, Long> {
             SET last_update = :time
           WHERE url = :url
     """, nativeQuery = true)
-    void setLastUpdate(URI url, OffsetDateTime time);
+    void setLastUpdateByUrl(URI url, OffsetDateTime time);
 }
