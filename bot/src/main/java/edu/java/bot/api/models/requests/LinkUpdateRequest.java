@@ -1,4 +1,4 @@
-package edu.java.scrapper.api.models;
+package edu.java.bot.api.models.requests;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

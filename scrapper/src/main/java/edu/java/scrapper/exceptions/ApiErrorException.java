@@ -1,6 +1,6 @@
 package edu.java.scrapper.exceptions;
 
-import edu.java.scrapper.api.models.ApiErrorResponse;
+import edu.java.scrapper.api.models.response.ApiErrorResponse;
 import lombok.Getter;
 
 @Getter

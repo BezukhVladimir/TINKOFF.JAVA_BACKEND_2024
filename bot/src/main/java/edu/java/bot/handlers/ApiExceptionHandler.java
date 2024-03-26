@@ -1,6 +1,6 @@
 package edu.java.bot.handlers;
 
-import edu.java.bot.api.models.ApiErrorResponse;
+import edu.java.bot.api.models.responses.ApiErrorResponse;
 import edu.java.bot.exceptions.UpdateAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;

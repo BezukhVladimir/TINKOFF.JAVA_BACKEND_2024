@@ -1,10 +1,10 @@
 package edu.java.bot.clients;
 
-import edu.java.bot.api.models.AddLinkRequest;
-import edu.java.bot.api.models.ApiErrorResponse;
-import edu.java.bot.api.models.LinkResponse;
-import edu.java.bot.api.models.ListLinksResponse;
-import edu.java.bot.api.models.RemoveLinkRequest;
+import edu.java.bot.api.models.requests.AddLinkRequest;
+import edu.java.bot.api.models.requests.RemoveLinkRequest;
+import edu.java.bot.api.models.responses.ApiErrorResponse;
+import edu.java.bot.api.models.responses.LinkResponse;
+import edu.java.bot.api.models.responses.ListLinksResponse;
 import edu.java.bot.exceptions.ApiErrorException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
@@ -20,10 +20,10 @@ public class ScrapperWebClient {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 
-    public String registerChat(Long id) {
+    public String registerChat(Long chatId) {
         return webClient
             .post()
-            .uri(uriBuilder -> uriBuilder.path(PATH_TO_CHAT).build(id))
+            .uri(uriBuilder -> uriBuilder.path(PATH_TO_CHAT).build(chatId))
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,
                 response -> response
@@ -33,10 +33,10 @@ public class ScrapperWebClient {
             .block();
     }
 
-    public String deleteChat(Long id) {
+    public String deleteChat(Long chatId) {
         return webClient
             .delete()
-            .uri(uriBuilder -> uriBuilder.path(PATH_TO_CHAT).build(id))
+            .uri(uriBuilder -> uriBuilder.path(PATH_TO_CHAT).build(chatId))
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,
                 response -> response
@@ -46,11 +46,11 @@ public class ScrapperWebClient {
             .block();
     }
 
-    public ListLinksResponse getLinks(Long id) {
+    public ListLinksResponse getLinks(Long chatId) {
         return webClient
             .get()
             .uri(PATH_TO_LINK)
-            .header(HEADER_NAME, String.valueOf(id))
+            .header(HEADER_NAME, String.valueOf(chatId))
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,
                 response -> response
@@ -60,11 +60,11 @@ public class ScrapperWebClient {
             .block();
     }
 
-    public LinkResponse addLink(Long id, AddLinkRequest request) {
+    public LinkResponse addLink(Long chatId, AddLinkRequest request) {
         return webClient
             .post()
             .uri(PATH_TO_LINK)
-            .header(HEADER_NAME, String.valueOf(id))
+            .header(HEADER_NAME, String.valueOf(chatId))
             .body(BodyInserters.fromValue(request))
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,
@@ -75,10 +75,10 @@ public class ScrapperWebClient {
             .block();
     }
 
-    public LinkResponse removeLink(Long id, RemoveLinkRequest request) {
+    public LinkResponse removeLink(Long chatId, RemoveLinkRequest request) {
         return webClient.method(HttpMethod.DELETE)
             .uri(PATH_TO_LINK)
-            .header(HEADER_NAME, String.valueOf(id))
+            .header(HEADER_NAME, String.valueOf(chatId))
             .body(BodyInserters.fromValue(request))
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,

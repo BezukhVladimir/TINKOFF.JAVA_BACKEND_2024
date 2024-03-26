@@ -1,6 +1,6 @@
 package edu.java.scrapper.services.updates.updaters.stackoverflow;
 
-import edu.java.scrapper.api.models.LinkUpdateRequest;
+import edu.java.scrapper.api.models.request.LinkUpdateRequest;
 import edu.java.scrapper.clients.BotWebClient;
 import edu.java.scrapper.clients.stackoverflow.Client;
 import edu.java.scrapper.dto.stackoverflow.Response;

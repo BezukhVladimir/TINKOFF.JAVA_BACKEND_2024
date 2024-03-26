@@ -1,6 +1,6 @@
 package edu.java.scrapper.services.updates.updaters.github;
 
-import edu.java.scrapper.api.models.LinkUpdateRequest;
+import edu.java.scrapper.api.models.request.LinkUpdateRequest;
 import edu.java.scrapper.clients.BotWebClient;
 import edu.java.scrapper.clients.github.Client;
 import edu.java.scrapper.dto.github.Response;

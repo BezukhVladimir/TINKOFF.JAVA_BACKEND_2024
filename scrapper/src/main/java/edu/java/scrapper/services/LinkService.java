@@ -1,6 +1,6 @@
 package edu.java.scrapper.services;
 
-import edu.java.scrapper.api.models.LinkResponse;
+import edu.java.scrapper.api.models.response.LinkResponse;
 import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.EntityNotFoundException;
 import edu.java.scrapper.exceptions.NotFoundException;

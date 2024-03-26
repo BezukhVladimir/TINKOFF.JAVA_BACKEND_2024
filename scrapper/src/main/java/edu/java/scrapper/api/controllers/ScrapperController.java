@@ -1,9 +1,9 @@
 package edu.java.scrapper.api.controllers;
 
-import edu.java.scrapper.api.models.AddLinkRequest;
-import edu.java.scrapper.api.models.LinkResponse;
-import edu.java.scrapper.api.models.ListLinksResponse;
-import edu.java.scrapper.api.models.RemoveLinkRequest;
+import edu.java.scrapper.api.models.request.AddLinkRequest;
+import edu.java.scrapper.api.models.request.RemoveLinkRequest;
+import edu.java.scrapper.api.models.response.LinkResponse;
+import edu.java.scrapper.api.models.response.ListLinksResponse;
 import edu.java.scrapper.services.ChatService;
 import edu.java.scrapper.services.LinkService;
 import jakarta.validation.Valid;

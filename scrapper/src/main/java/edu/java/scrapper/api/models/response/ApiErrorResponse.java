@@ -1,6 +1,7 @@
-package edu.java.bot.api.models;
+package edu.java.scrapper.api.models.response;
 
 import java.util.List;
+
 
 public record ApiErrorResponse(
     String description,
