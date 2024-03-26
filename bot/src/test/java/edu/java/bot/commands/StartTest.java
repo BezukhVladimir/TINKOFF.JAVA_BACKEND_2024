@@ -7,6 +7,7 @@ import edu.java.bot.BotApplication;
 import edu.java.bot.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ class StartTest {
         userService.clear();
     }
 
+    @Disabled // нужен сервер
     @Test
     @DisplayName("Регистрация пользователя, затем повторная регистрация")
     void registerUserTwice() {
