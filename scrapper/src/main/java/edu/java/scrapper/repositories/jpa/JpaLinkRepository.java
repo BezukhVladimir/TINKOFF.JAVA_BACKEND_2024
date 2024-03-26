@@ -28,8 +28,9 @@ public class JpaLinkRepository implements LinkRepository {
             existingLink = null;
         }
 
+        Link link = new Link().setUrl(url).setLastUpdate(OffsetDateTime.now());
         addedLink = Objects.requireNonNullElseGet(existingLink, () -> jpaLinkRepositoryInterface.save(
-            new Link().setUrl(url).setLastUpdate(OffsetDateTime.now())
+            link
         ));
 
         jpaLinkRepositoryInterface.saveByChatIdAndLinkId(chatId, addedLink.getId());
