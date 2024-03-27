@@ -63,5 +63,5 @@ public interface JpaLinkRepositoryInterface extends JpaRepository<Link, Long> {
             SET last_update = :time
           WHERE url = :url
     """, nativeQuery = true)
-    void setLastUpdateByUrl(URI url, OffsetDateTime time);
+    void setLastUpdateByUrl(String url, OffsetDateTime time);
 }
