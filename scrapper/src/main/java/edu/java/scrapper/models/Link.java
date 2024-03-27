@@ -12,14 +12,20 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.net.URI;
 import java.time.OffsetDateTime;
-import java.util.List;
-import lombok.Data;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.proxy.HibernateProxy;
 
+@Getter
+@Setter
 @Entity
-@Data
-@Accessors(chain = true)
 @Table(schema = "link_tracker_db")
+@Accessors(chain = true)
 public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +34,45 @@ public class Link {
     @Convert(converter = URIConverter.class)
     private URI url;
 
+    @CreationTimestamp
     @Column(name = "last_update")
     private OffsetDateTime lastUpdate;
 
     @ManyToMany(mappedBy = "links")
-    private List<Chat> chats;
+    private Set<Chat> chats = new LinkedHashSet<>();
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null) {
+            return false;
+        }
+
+        Class<?> oEffectiveClass = o instanceof HibernateProxy
+            ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+            : o.getClass();
+
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy
+            ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+            : this.getClass();
+
+        if (thisEffectiveClass != oEffectiveClass) {
+            return false;
+        }
+
+        Link link = (Link) o;
+        return getId() != null && Objects.equals(getId(), link.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy
+            ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+            : getClass().hashCode();
+    }
 
     @Converter(autoApply = true)
     static class URIConverter implements AttributeConverter<URI, String> {
