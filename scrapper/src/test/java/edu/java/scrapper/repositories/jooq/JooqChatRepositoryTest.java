@@ -8,6 +8,7 @@ import java.net.URI;
 import java.util.List;
 import org.jooq.exception.IntegrityConstraintViolationException;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DuplicateKeyException;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -38,7 +39,7 @@ class JooqChatRepositoryTest extends JooqIntegrationTest {
         });
 
         // Assert
-        assertThat(thrown).isInstanceOf(IntegrityConstraintViolationException.class);
+        assertThat(thrown).isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test

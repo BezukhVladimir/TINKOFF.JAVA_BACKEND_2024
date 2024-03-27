@@ -9,25 +9,15 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(properties = "app.database-access-type=jooq")
 public class JooqIntegrationTest extends IntegrationTest {
-    protected static DSLContext dslContext;
-    protected static JooqChatRepository jooqChatRepository;
-    protected static JooqLinkRepository jooqLinkRepository;
-
-    @BeforeAll
-    static void setUp() {
-        DefaultConfiguration configuration = new DefaultConfiguration();
-
-        configuration.set(dataSource);
-        configuration.set(SQLDialect.POSTGRES);
-        configuration.settings().withRenderQuotedNames(RenderQuotedNames.EXPLICIT_DEFAULT_UNQUOTED);
-
-        dslContext = DSL.using(configuration);
-
-        jooqChatRepository = new JooqChatRepository(dslContext);
-        jooqLinkRepository = new JooqLinkRepository(dslContext);
-    }
+    @Autowired
+    protected ChatRepository jooqChatRepository;
+    @Autowired
+    protected LinkRepository jooqLinkRepository;
 
     @AfterEach
     void clear() {

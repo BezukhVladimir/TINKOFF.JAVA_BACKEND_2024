@@ -57,6 +57,7 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public void removeUnusedLinks() {
         jpaLinkRepositoryInterface.removeUnusedLinks();
     }
@@ -82,6 +83,7 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public void setLastUpdate(URI url, OffsetDateTime time) {
         jpaLinkRepositoryInterface.setLastUpdateByUrl(url, time);
     }

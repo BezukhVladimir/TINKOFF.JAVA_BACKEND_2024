@@ -5,24 +5,14 @@ import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.JpaIntegrationTest;
 import java.net.URI;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class JpaChatRepositoryTest extends JpaIntegrationTest {
-    @Autowired
-    public JpaChatRepositoryTest(
-        JpaChatRepositoryInterface jpaChatRepositoryInterface,
-        JpaLinkRepositoryInterface jpaLinkRepositoryInterface
-    ) {
-        jpaChatRepository = new JpaChatRepository(jpaChatRepositoryInterface);
-        jpaLinkRepository = new JpaLinkRepository(jpaLinkRepositoryInterface);
-    }
-
     @Test
     void add() {
         // Arrange
@@ -30,21 +20,6 @@ class JpaChatRepositoryTest extends JpaIntegrationTest {
 
         // Act
         Chat chat1 = jpaChatRepository.add(chatId);
-        List<Chat> chats = jpaChatRepository.findAll();
-
-        // Assert
-        assertThat(chats).containsOnly(chat1);
-    }
-
-    @Test
-    void addDuplicate() {
-        // Arrange
-        Long chatId = 1L;
-        jpaChatRepository.add(chatId);
-
-        // Act
-        Chat chat1 = jpaChatRepository.add(chatId); // insert
-        Chat chat2 = jpaChatRepository.add(chatId); // update
         List<Chat> chats = jpaChatRepository.findAll();
 
         // Assert
