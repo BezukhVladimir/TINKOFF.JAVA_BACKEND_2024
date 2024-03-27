@@ -3,7 +3,6 @@ package edu.java.scrapper.repositories.jpa;
 import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.repositories.ChatRepository;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +12,7 @@ public class JpaChatRepository implements ChatRepository {
 
     @Override
     public Chat add(Long id) {
-        return jpaChatRepositoryInterface.save(new Chat().setId(id).setCreatedAt(OffsetDateTime.now()));
+        return jpaChatRepositoryInterface.save(new Chat().setId(id));
     }
 
     @Override

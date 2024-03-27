@@ -37,9 +37,9 @@ class LinkServiceTest {
     @Test
     public void listAll() {
         // Arrange
-        Link link1 = new Link().setId(1L).setUrl(URI.create("")).setLastUpdate(OffsetDateTime.now());
-        Link link2 = new Link().setId(2L).setUrl(URI.create("")).setLastUpdate(OffsetDateTime.now());
-        Link link3 = new Link().setId(3L).setUrl(URI.create("")).setLastUpdate(OffsetDateTime.now());
+        Link link1 = new Link().setId(1L).setUrl(URI.create(""));
+        Link link2 = new Link().setId(2L).setUrl(URI.create(""));
+        Link link3 = new Link().setId(3L).setUrl(URI.create(""));
 
         when(linkRepository.findAllLinksByChatId(1L))
             .thenReturn(List.of(link1, link2, link3));

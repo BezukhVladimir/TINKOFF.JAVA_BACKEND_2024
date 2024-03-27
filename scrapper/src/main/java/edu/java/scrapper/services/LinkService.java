@@ -86,7 +86,7 @@ public class LinkService {
             );
         }
 
-        return mapToLinkResponse(new Link().setId(chatId).setUrl(url).setLastUpdate(OffsetDateTime.now()));
+        return mapToLinkResponse(new Link().setId(chatId).setUrl(url));
     }
 
     public List<LinkResponse> listAll(Long chatId) {

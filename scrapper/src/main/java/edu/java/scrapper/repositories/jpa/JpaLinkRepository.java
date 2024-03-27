@@ -28,7 +28,7 @@ public class JpaLinkRepository implements LinkRepository {
             existingLink = null;
         }
 
-        Link link = new Link().setUrl(url).setLastUpdate(OffsetDateTime.now());
+        Link link = new Link().setUrl(url);
         addedLink = Objects.requireNonNullElseGet(existingLink, () -> jpaLinkRepositoryInterface.save(
             link
         ));
