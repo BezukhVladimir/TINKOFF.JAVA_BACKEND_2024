@@ -6,19 +6,17 @@ import edu.java.scrapper.repositories.jpa.JpaChatRepository;
 import edu.java.scrapper.repositories.jpa.JpaChatRepositoryInterface;
 import edu.java.scrapper.repositories.jpa.JpaLinkRepository;
 import edu.java.scrapper.repositories.jpa.JpaLinkRepositoryInterface;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
+@RequiredArgsConstructor
 public class JpaConfig {
-    @Autowired
-    private JpaChatRepositoryInterface jpaChatRepositoryInterface;
-
-    @Autowired
-    private JpaLinkRepositoryInterface jpaLinkRepositoryInterface;
+    private final JpaChatRepositoryInterface jpaChatRepositoryInterface;
+    private final JpaLinkRepositoryInterface jpaLinkRepositoryInterface;
 
     @Bean
     public ChatRepository jpaChatRepository() {
@@ -27,7 +25,6 @@ public class JpaConfig {
 
     @Bean
     public LinkRepository jpaLinkRepository() {
-
         return new JpaLinkRepository(jpaLinkRepositoryInterface);
     }
 }
