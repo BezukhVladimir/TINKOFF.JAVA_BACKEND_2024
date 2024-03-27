@@ -102,59 +102,42 @@ public class JooqLinkRepository implements LinkRepository {
         return dslContext
             .selectFrom(LINK)
             .where(LINK.URL.eq(url.toString()))
-            .fetchOptional()
-            .map(r -> new Link()
-                    .setId(r.getId())
-                    .setUrl(URI.create(r.getUrl()))
-                    .setLastUpdate(r.getLastUpdate())
-            )
-            .orElse(null);
+            .fetchOneInto(Link.class);
     }
 
     @Override
     public List<Link> findAll() {
         return dslContext
             .selectFrom(LINK)
-            .fetch()
-            .map(r -> new Link()
-                .setId(r.getId())
-                .setUrl(URI.create(r.getUrl()))
-                .setLastUpdate(r.getLastUpdate())
-            );
+            .fetchInto(Link.class);
     }
 
     @Override
     public List<Link> findAllLinksByChatId(Long chatId) {
         return dslContext
             .select(LINK.fields())
-              .from(LINK)
-              .join(CHATS_LINKS)
-                .on(LINK.ID.eq(CHATS_LINKS.ID_LINK))
-             .where(CHATS_LINKS.ID_CHAT.eq(chatId))
-            .fetch()
-            .map(r -> new Link()
-                    .setId(r.get(LINK.ID))
-                    .setUrl(URI.create(r.get(LINK.URL)))
-                    .setLastUpdate(r.get(LINK.LAST_UPDATE))
-            );
+            .from(LINK)
+            .where(LINK.ID.in(
+                dslContext.select(CHATS_LINKS.ID_LINK)
+                    .from(CHATS_LINKS)
+                    .where(CHATS_LINKS.ID_CHAT.eq(chatId))
+            ))
+            .fetchInto(Link.class);
     }
 
     @Override
     public List<Link> findByOldestUpdates(int count) {
-        return dslContext.selectFrom(LINK)
-               .orderBy(LINK.LAST_UPDATE)
-                 .limit(count)
-            .fetch()
-            .map(r -> new Link()
-                .setId(r.getId())
-                .setUrl(URI.create(r.getUrl()))
-                .setLastUpdate(r.getLastUpdate())
-            );
+        return dslContext
+            .selectFrom(LINK)
+            .orderBy(LINK.LAST_UPDATE)
+            .limit(count)
+            .fetchInto(Link.class);
     }
 
     @Override
     public void setLastUpdate(URI url, OffsetDateTime time) {
-        dslContext.update(LINK)
+        dslContext
+            .update(LINK)
             .set(LINK.LAST_UPDATE, time)
             .where(LINK.URL.eq(url.toString()))
             .execute();

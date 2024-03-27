@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,10 +66,7 @@ public class JdbcChatRepository implements ChatRepository {
               FROM link_tracker_db.chat
              WHERE id = ?
             """,
-            (rs, rowNum) -> new Chat()
-                .setId(rs.getLong("id"))
-                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class)
-            ),
+            BeanPropertyRowMapper.newInstance(Chat.class),
             id
         );
     }
@@ -76,14 +74,11 @@ public class JdbcChatRepository implements ChatRepository {
     @Override
     public List<Chat> findAll() {
         return jdbcTemplate.query(
-                """
-                SELECT *
-                  FROM link_tracker_db.chat
-                """,
-            (rs, rowNum) -> new Chat()
-                .setId(rs.getLong("id"))
-                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class)
-            )
+            """
+            SELECT *
+              FROM link_tracker_db.chat
+            """,
+            BeanPropertyRowMapper.newInstance(Chat.class)
         );
     }
 
@@ -96,11 +91,8 @@ public class JdbcChatRepository implements ChatRepository {
               JOIN link_tracker_db.chat c ON cl.id_chat = c.id
               JOIN link_tracker_db.link l ON cl.id_link = l.id
              WHERE l.url = ?
-             """,
-            (rs, rowNum) -> new Chat()
-                .setId(rs.getLong("id"))
-                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class)
-            ),
+            """,
+            BeanPropertyRowMapper.newInstance(Chat.class),
             url.toString()
         );
     }

@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +38,10 @@ public class JdbcLinkRepository implements LinkRepository {
         }
 
         jdbcTemplate.update(
-                """
-                INSERT INTO link_tracker_db.chats_links (id_chat, id_link)
-                VALUES (?, ?)
-                """,
+            """
+            INSERT INTO link_tracker_db.chats_links (id_chat, id_link)
+            VALUES (?, ?)
+            """,
             chatId, addedLink.getId()
         );
 
@@ -67,13 +68,13 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public void remove(Long chatId, URI url) {
         int rowsAffected = jdbcTemplate.update(
-                """
-                DELETE FROM link_tracker_db.chats_links cl
-                 USING link_tracker_db.link l
-                 WHERE cl.id_chat = ?
-                   AND cl.id_link = l.id
-                   AND l.url = ?
-                """,
+            """
+            DELETE FROM link_tracker_db.chats_links cl
+             USING link_tracker_db.link l
+             WHERE cl.id_chat = ?
+               AND cl.id_link = l.id
+               AND l.url = ?
+            """,
             chatId, url.toString()
         );
 
@@ -112,11 +113,7 @@ public class JdbcLinkRepository implements LinkRepository {
               FROM link_tracker_db.link
              WHERE url = ?
             """,
-            (rs, rowNum) -> new Link()
-                .setId(rs.getLong("id"))
-                .setUrl(URI.create(rs.getString("url")))
-                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
-            ),
+            BeanPropertyRowMapper.newInstance(Link.class),
             url.toString()
         );
     }
@@ -128,11 +125,7 @@ public class JdbcLinkRepository implements LinkRepository {
             SELECT *
               FROM link_tracker_db.link
             """,
-            (rs, rowNum) -> new Link()
-                .setId(rs.getLong("id"))
-                .setUrl(URI.create(rs.getString("url")))
-                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
-            )
+            BeanPropertyRowMapper.newInstance(Link.class)
         );
     }
 
@@ -146,11 +139,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 ON l.id = cl.id_link
              WHERE cl.id_chat = ?
             """,
-            (rs, rowNum) -> new Link()
-                .setId(rs.getLong("id"))
-                .setUrl(URI.create(rs.getString("url")))
-                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
-            ),
+            BeanPropertyRowMapper.newInstance(Link.class),
             chatId
         );
     }
@@ -164,11 +153,7 @@ public class JdbcLinkRepository implements LinkRepository {
              ORDER BY last_update
              LIMIT ?
             """,
-            (rs, rowNum) -> new Link()
-                .setId(rs.getLong("id"))
-                .setUrl(URI.create(rs.getString("url")))
-                .setLastUpdate(rs.getObject("last_update", OffsetDateTime.class)
-            ),
+            BeanPropertyRowMapper.newInstance(Link.class),
             count
         );
     }

@@ -6,7 +6,6 @@ import edu.java.scrapper.repositories.ChatRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.dao.DataAccessException;
@@ -47,41 +46,34 @@ public class JooqChatRepository implements ChatRepository {
     @Override
     @Transactional
     public void removeAll() {
-        dslContext.deleteFrom(CHAT).execute();
+        dslContext
+            .deleteFrom(CHAT)
+            .execute();
     }
 
     @Override
     public Chat findById(Long id) throws DataAccessException {
-        return Objects.requireNonNull(dslContext.selectFrom(CHAT)
-                .where(CHAT.ID.eq(id))
-                .fetchOne())
-            .map(r -> new Chat()
-                .setId(r.get(CHAT.ID))
-                .setCreatedAt(r.get(CHAT.CREATED_AT))
-            );
+        return dslContext
+            .selectFrom(CHAT)
+            .where(CHAT.ID.eq(id))
+            .fetchOneInto(Chat.class);
     }
 
     @Override
     public List<Chat> findAll() {
-        return dslContext.selectFrom(CHAT)
-            .fetch()
-            .map(r -> new Chat()
-                .setId(r.get(CHAT.ID))
-                .setCreatedAt(r.get(CHAT.CREATED_AT))
-            );
+        return dslContext
+            .selectFrom(CHAT)
+            .fetchInto(Chat.class);
     }
 
     @Override
     public List<Chat> findAllChatsByUrl(URI url) {
-        return dslContext.selectDistinct(CHAT.ID, CHAT.CREATED_AT)
+        return dslContext
+            .selectDistinct(CHAT.ID, CHAT.CREATED_AT)
             .from(CHATS_LINKS)
             .join(CHAT).on(CHATS_LINKS.ID_CHAT.eq(CHAT.ID))
             .join(LINK).on(CHATS_LINKS.ID_LINK.eq(LINK.ID))
             .where(LINK.URL.eq(url.toString()))
-            .fetch()
-            .map(r -> new Chat()
-                .setId(r.get(CHAT.ID))
-                .setCreatedAt(r.get(CHAT.CREATED_AT))
-            );
+            .fetchInto(Chat.class);
     }
 }
