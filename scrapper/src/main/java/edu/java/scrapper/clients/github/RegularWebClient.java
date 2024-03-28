@@ -5,18 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.java.scrapper.dto.github.Response;
 import java.util.List;
-import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.client.reactive.ClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 @Slf4j
 public class RegularWebClient implements Client {
@@ -25,14 +18,10 @@ public class RegularWebClient implements Client {
     private final WebClient webClient;
 
     public RegularWebClient() {
-        if (baseUrl == null) {
-            baseUrl = "https://api.github.com/";
-        }
-
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 
-    public RegularWebClient(String baseUrl) {
+    public RegularWebClient(@Value("${api.github.baseUrl}") String baseUrl) {
         String finalBaseUrl = baseUrl;
 
         if (baseUrl.isEmpty()) {

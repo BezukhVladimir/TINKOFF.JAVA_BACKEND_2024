@@ -5,7 +5,6 @@ import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.JooqIntegrationTest;
 import java.net.URI;
 import java.util.List;
-import org.jooq.exception.IntegrityConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;

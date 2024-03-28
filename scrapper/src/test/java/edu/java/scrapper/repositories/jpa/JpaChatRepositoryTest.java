@@ -5,11 +5,7 @@ import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.JpaIntegrationTest;
 import java.net.URI;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class JpaChatRepositoryTest extends JpaIntegrationTest {
