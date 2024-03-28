@@ -13,7 +13,9 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(
     @NotNull
-    Scheduler scheduler
+    Scheduler scheduler,
+    @NotNull
+    String databaseAccessType
 ) {
     @Bean
     public DefaultConfigurationCustomizer configurationCustomizer() {

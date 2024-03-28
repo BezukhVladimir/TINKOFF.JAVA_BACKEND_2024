@@ -1,9 +1,9 @@
 package edu.java.bot.clients;
 
-import edu.java.bot.api.models.AddLinkRequest;
-import edu.java.bot.api.models.LinkResponse;
-import edu.java.bot.api.models.ListLinksResponse;
-import edu.java.bot.api.models.RemoveLinkRequest;
+import edu.java.bot.api.models.requests.AddLinkRequest;
+import edu.java.bot.api.models.requests.RemoveLinkRequest;
+import edu.java.bot.api.models.responses.LinkResponse;
+import edu.java.bot.api.models.responses.ListLinksResponse;
 import edu.java.bot.exceptions.ApiErrorException;
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -1,6 +1,7 @@
 package edu.java.scrapper.schedulers;
 
 import edu.java.scrapper.services.updates.LinkUpdateService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,25 +13,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "app.scheduler.enable", havingValue = "true")
 public class LinkUpdaterScheduler {
-    private final LinkUpdateService jdbcLinkUpdateService;
+    private final LinkUpdateService linkUpdateService;
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
         log.info("Running update");
 
         try {
-            jdbcLinkUpdateService.update();
+            linkUpdateService.update();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Transactional
     @Scheduled(fixedDelayString = "${app.scheduler.removeUnusedLinksInterval}")
     public void removeUnusedLinks() {
         log.info("Remove unused links");
 
         try {
-            jdbcLinkUpdateService.removeUnusedLinks();
+            linkUpdateService.removeUnusedLinks();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

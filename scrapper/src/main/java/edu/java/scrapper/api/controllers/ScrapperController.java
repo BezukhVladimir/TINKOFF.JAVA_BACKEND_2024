@@ -1,11 +1,11 @@
 package edu.java.scrapper.api.controllers;
 
-import edu.java.scrapper.api.models.AddLinkRequest;
-import edu.java.scrapper.api.models.LinkResponse;
-import edu.java.scrapper.api.models.ListLinksResponse;
-import edu.java.scrapper.api.models.RemoveLinkRequest;
-import edu.java.scrapper.services.chats.ChatService;
-import edu.java.scrapper.services.links.LinkService;
+import edu.java.scrapper.api.models.request.AddLinkRequest;
+import edu.java.scrapper.api.models.request.RemoveLinkRequest;
+import edu.java.scrapper.api.models.response.LinkResponse;
+import edu.java.scrapper.api.models.response.ListLinksResponse;
+import edu.java.scrapper.services.ChatService;
+import edu.java.scrapper.services.LinkService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ScrapperController {
-    private final ChatService jdbcChatService;
-    private final LinkService jdbcLinkService;
+    private final ChatService chatService;
+    private final LinkService linkService;
 
     @PostMapping("/tg-chat/{id}")
     public String registerChat(@PathVariable("id") Long id) {
-        jdbcChatService.register(id);
+        chatService.register(id);
         return "Чат зарегистрирован";
     }
 
     @DeleteMapping("/tg-chat/{id}")
     public String deleteChat(@PathVariable("id") Long id) {
-        jdbcChatService.unregister(id);
+        chatService.unregister(id);
         return "Чат успешно удалён";
     }
 
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader("Tg-Chat-Id") Long chatId) {
-        List<LinkResponse> links = jdbcLinkService.listAll(chatId);
+        List<LinkResponse> links = linkService.listAll(chatId);
         return new ListLinksResponse(links, links.size());
     }
 
@@ -46,7 +46,7 @@ public class ScrapperController {
         @RequestHeader("Tg-Chat-Id") Long chatId,
         @RequestBody @Valid AddLinkRequest request
     ) {
-        return jdbcLinkService.add(chatId, request.link());
+        return linkService.add(chatId, request.link());
     }
 
     @DeleteMapping("/links")
@@ -54,6 +54,6 @@ public class ScrapperController {
         @RequestHeader("Tg-Chat-Id") Long chatId,
         @RequestBody @Valid RemoveLinkRequest request
     ) {
-        return jdbcLinkService.remove(chatId, request.link());
+        return linkService.remove(chatId, request.link());
     }
 }

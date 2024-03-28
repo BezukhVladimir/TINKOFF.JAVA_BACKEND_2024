@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -91,6 +92,7 @@ class MessageServiceTest {
         );
     }
 
+    @Disabled // нужен сервер
     @ParameterizedTest
     @MethodSource("registeredUserCommands")
     @DisplayName("Пользователь зарегистрирован, попытка ввести некорректные команды")

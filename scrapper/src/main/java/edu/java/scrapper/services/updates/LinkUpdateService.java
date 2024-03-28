@@ -1,7 +1,7 @@
 package edu.java.scrapper.services.updates;
 
 import edu.java.scrapper.models.Link;
-import edu.java.scrapper.repositories.links.LinkRepository;
+import edu.java.scrapper.repositories.LinkRepository;
 import edu.java.scrapper.services.updates.updaters.LinkUpdater;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,18 +13,18 @@ import static edu.java.scrapper.utils.LinkUtils.extractDomainFromUrl;
 public class LinkUpdateService {
     private final static int UPDATES = 3;
 
-    private final LinkRepository jdbcLinkRepository;
+    private final LinkRepository linkRepository;
     private final LinkHolder linkHolder;
 
     public int update() {
-        List<Link> links = jdbcLinkRepository.findByOldestUpdates(UPDATES);
+        List<Link> links = linkRepository.findByOldestUpdates(UPDATES);
 
         int count = 0;
         for (Link link : links) {
-            String domain = extractDomainFromUrl(link.url());
+            String domain = extractDomainFromUrl(link.getUrl());
             LinkUpdater linkUpdater = linkHolder.getUpdaterByDomain(domain);
 
-            if (linkUpdater.supports(link.url())) {
+            if (linkUpdater.supports(link.getUrl())) {
                 count += linkUpdater.process(link);
             }
         }
@@ -33,6 +33,6 @@ public class LinkUpdateService {
     }
 
     public void removeUnusedLinks() {
-        jdbcLinkRepository.removeUnusedLinks();
+        linkRepository.removeUnusedLinks();
     }
 }

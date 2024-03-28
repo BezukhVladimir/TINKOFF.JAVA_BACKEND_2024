@@ -1,6 +1,6 @@
 package edu.java.scrapper.handlers;
 
-import edu.java.scrapper.api.models.ApiErrorResponse;
+import edu.java.scrapper.api.models.response.ApiErrorResponse;
 import edu.java.scrapper.exceptions.BadRequestException;
 import edu.java.scrapper.exceptions.NotFoundException;
 import java.util.ArrayList;

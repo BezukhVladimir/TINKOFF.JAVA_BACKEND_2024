@@ -20,11 +20,13 @@ public class MessageService {
     public String createResponseText(Update update) {
         long chatId = update.message().chat().id();
         String text = update.message().text();
+
         Optional<Command> command = commandHandler.findByName(text);
 
         if (command.isPresent()) {
             return command.get().handle(update);
         } else {
+            // TODO далее применяется логика SessionState
             return createNonCommandText(chatId, text);
         }
     }

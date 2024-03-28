@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.java.scrapper.dto.github.Response;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-
+@Slf4j
 public class RegularWebClient implements Client {
     @Value("${api.github.baseUrl}")
     private String baseUrl;
@@ -18,14 +21,26 @@ public class RegularWebClient implements Client {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 
-    public RegularWebClient(String baseUrl) {
+    public RegularWebClient(@Value("${api.github.baseUrl}") String baseUrl) {
         String finalBaseUrl = baseUrl;
 
         if (baseUrl.isEmpty()) {
             finalBaseUrl = this.baseUrl;
         }
 
-        this.webClient = WebClient.builder().baseUrl(finalBaseUrl).build();
+        this.webClient = WebClient
+            .builder()
+            .baseUrl(finalBaseUrl)
+            .filter(logRequest())
+            .build();
+    }
+
+    private static ExchangeFilterFunction logRequest() {
+        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+            log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
+            clientRequest.headers().forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));
+            return Mono.just(clientRequest);
+        });
     }
 
     @Override

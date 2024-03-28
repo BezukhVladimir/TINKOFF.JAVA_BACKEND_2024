@@ -1,6 +1,6 @@
 package edu.java.bot.api.controllers;
 
-import edu.java.bot.api.models.LinkUpdateRequest;
+import edu.java.bot.api.models.requests.LinkUpdateRequest;
 import edu.java.bot.listeners.BotUpdatesListener;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
