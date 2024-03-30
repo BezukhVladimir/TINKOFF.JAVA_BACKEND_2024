@@ -1,13 +1,13 @@
 package edu.java.scrapper.services.updates.updaters.stackoverflow;
 
-import edu.java.scrapper.api.models.LinkUpdateRequest;
+import edu.java.scrapper.api.models.request.LinkUpdateRequest;
 import edu.java.scrapper.clients.BotWebClient;
 import edu.java.scrapper.clients.stackoverflow.Client;
 import edu.java.scrapper.dto.stackoverflow.Response;
 import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.models.Link;
-import edu.java.scrapper.repositories.chats.ChatRepository;
-import edu.java.scrapper.repositories.links.LinkRepository;
+import edu.java.scrapper.repositories.ChatRepository;
+import edu.java.scrapper.repositories.LinkRepository;
 import edu.java.scrapper.services.updates.updaters.LinkUpdater;
 import java.net.URI;
 import java.util.List;
@@ -20,36 +20,36 @@ import org.springframework.stereotype.Service;
 public class StackOverflowLinkUpdater implements LinkUpdater {
     private final BotWebClient botWebClient;
     private final Client stackOverflowRegularWebClient;
-    private final ChatRepository jdbcChatRepository;
-    private final LinkRepository jdbcLinkRepository;
+    private final ChatRepository chatRepository;
+    private final LinkRepository linkRepository;
 
     @Override
     public int process(Link link) {
-        String[] args = processLink(link.url());
+        String[] args = processLink(link.getUrl());
 
         long number = Long.parseLong(args[args.length - 1]);
 
         Response stackOverflowResponse =
             stackOverflowRegularWebClient.fetchLatestModified(number);
 
-        if (stackOverflowResponse.lastActivityDate().isAfter(link.lastUpdate())) {
-            List<Long> chatIds = jdbcChatRepository
-                .findAllChatsByUrl(link.url())
+        if (stackOverflowResponse.lastActivityDate().isAfter(link.getLastUpdate())) {
+            List<Long> chatIds = chatRepository
+                .findAllChatsByUrl(link.getUrl())
                 .stream()
-                .map(Chat::id)
+                .map(Chat::getId)
                 .toList();
 
             try {
                 botWebClient.sendUpdate(new LinkUpdateRequest(
-                    link.id(),
-                    link.url(),
+                    link.getId(),
+                    link.getUrl(),
                     getDescription(stackOverflowResponse),
                     chatIds
                 ));
             } catch (Exception ignored) {
             }
 
-            jdbcLinkRepository.setLastUpdate(link.url(), stackOverflowResponse.lastActivityDate());
+            linkRepository.setLastUpdate(link.getUrl(), stackOverflowResponse.lastActivityDate());
             return 1;
         }
         return 0;
@@ -72,14 +72,14 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
 
     @Override
     public void setLastUpdate(Link link) {
-        String[] args = processLink(link.url());
+        String[] args = processLink(link.getUrl());
 
         long number = Long.parseLong(args[args.length - 1]);
 
         Response stackOverflowResponse =
             stackOverflowRegularWebClient.fetchLatestModified(number);
 
-        jdbcLinkRepository.setLastUpdate(link.url(), stackOverflowResponse.lastActivityDate());
+        linkRepository.setLastUpdate(link.getUrl(), stackOverflowResponse.lastActivityDate());
     }
 
     private String getDescription(Response stackOverflowResponse) {

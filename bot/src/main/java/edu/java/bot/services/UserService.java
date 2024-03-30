@@ -1,5 +1,8 @@
 package edu.java.bot.services;
 
+import edu.java.bot.api.models.requests.AddLinkRequest;
+import edu.java.bot.api.models.requests.RemoveLinkRequest;
+import edu.java.bot.clients.ScrapperWebClient;
 import edu.java.bot.models.SessionState;
 import edu.java.bot.models.User;
 import java.net.URI;
@@ -8,10 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
+    private final ScrapperWebClient scrapperWebClient;
     private final Map<Long, User> users = new HashMap<>();
 
     public void clear() {
@@ -39,6 +45,8 @@ public class UserService {
         Optional<User> initiator = findById(chatId);
 
         if (initiator.isEmpty()) {
+            // TODO дублирование сущностей
+            scrapperWebClient.registerChat(chatId);
             addUser(new User(chatId, List.of(), SessionState.DEFAULT));
 
             return true;
@@ -73,19 +81,21 @@ public class UserService {
      * Добавляет ссылку в список для отслеживания.
      *
      * @param user пользователь
-     * @param uri ссылка
+     * @param url ссылка
      * @return {@code true} если ссылка добавлена,
      *         {@code false} если ссылка уже есть в списке
      */
-    public boolean addLink(User user, URI uri) {
+    public boolean addLink(User user, URI url) {
         List<URI> links = new ArrayList<>(user.getLinks());
 
-        if (links.contains(uri)) {
+        if (links.contains(url)) {
             return false;
         }
 
-        links.add(uri);
+        // TODO дублирование сущностей
+        links.add(url);
         updateLinks(user, links);
+        scrapperWebClient.addLink(user.getChatId(), new AddLinkRequest(url));
 
         return true;
     }
@@ -94,19 +104,21 @@ public class UserService {
      * Удаляет ссылку из списка для отслеживания.
      *
      * @param user пользователь
-     * @param uri ссылка
+     * @param url ссылка
      * @return {@code true} если ссылка удалена,
      *         {@code false} если ссылки не было в списке
      */
-    public boolean deleteLink(User user, URI uri) {
+    public boolean deleteLink(User user, URI url) {
         List<URI> links = new ArrayList<>(user.getLinks());
 
-        if (!links.contains(uri)) {
+        if (!links.contains(url)) {
             return false;
         }
 
-        links.remove(uri);
+        // TODO дублирование сущностей
+        links.remove(url);
         updateLinks(user, links);
+        scrapperWebClient.removeLink(user.getChatId(), new RemoveLinkRequest(url));
 
         return true;
     }

@@ -1,7 +1,7 @@
 package edu.java.scrapper.services.updates;
 
 import edu.java.scrapper.models.Link;
-import edu.java.scrapper.repositories.links.LinkRepository;
+import edu.java.scrapper.repositories.LinkRepository;
 import edu.java.scrapper.services.updates.updaters.LinkUpdater;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -28,9 +28,9 @@ public class LinkUpdateServiceTest {
         // Arrange
         when(jdbcLinkRepository.findByOldestUpdates(3))
             .thenReturn(List.of(
-                new Link(1L, URI.create("1"), OffsetDateTime.MAX),
-                new Link(2L, URI.create("2"), OffsetDateTime.MAX),
-                new Link(3L, URI.create("3"), OffsetDateTime.MAX)
+                new Link().setId(1L).setUrl(URI.create("1")).setLastUpdate(OffsetDateTime.MAX),
+                new Link().setId(2L).setUrl(URI.create("2")).setLastUpdate(OffsetDateTime.MAX),
+                new Link().setId(3L).setUrl(URI.create("3")).setLastUpdate(OffsetDateTime.MAX)
             ));
         when(linkHolder.getUpdaterByDomain(any())).thenReturn(linkUpdater);
         when(linkUpdater.supports(any())).thenReturn(true);

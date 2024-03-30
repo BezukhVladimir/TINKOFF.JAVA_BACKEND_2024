@@ -4,6 +4,7 @@ app:
     interval: 10000
     removeUnusedLinksInterval: 86400
     force-check-delay: 10000
+  database-access-type: jpa
 
 spring:
   application:
@@ -14,7 +15,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 server:
   port: 8080
