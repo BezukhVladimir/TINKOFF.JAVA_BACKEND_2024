@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -28,7 +29,13 @@ import org.hibernate.proxy.HibernateProxy;
 @Accessors(chain = true)
 public class Link {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+        name = "link_sequence_generator",
+        schema = "link_tracker_db",
+        sequenceName = "link_id_sequence",
+        allocationSize = 10
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "link_sequence_generator")
     private Long id;
 
     @Convert(converter = URIConverter.class)
