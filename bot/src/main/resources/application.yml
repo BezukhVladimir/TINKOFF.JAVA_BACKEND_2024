@@ -16,7 +16,14 @@ logging:
 api:
   scrapper:
     baseUrl: http://localhost:8080
+    retryPolicy: linear
+    retryCount: 3
+    codes: INTERNAL_SERVER_ERROR, BAD_GATEWAY, INSUFFICIENT_STORAGE, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
 
 springdoc:
   swagger-ui:
     path: /swagger-ui
+
+bucket:
+  queryCount: 10
+
