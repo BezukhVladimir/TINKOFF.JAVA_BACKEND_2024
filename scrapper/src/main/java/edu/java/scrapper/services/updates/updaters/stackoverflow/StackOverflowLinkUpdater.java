@@ -30,7 +30,7 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
         long number = Long.parseLong(args[args.length - 1]);
 
         Response stackOverflowResponse =
-            stackOverflowRegularWebClient.fetchLatestModified(number);
+            stackOverflowRegularWebClient.retryFetchLatestModified(number);
 
         if (stackOverflowResponse.lastActivityDate().isAfter(link.getLastUpdate())) {
             List<Long> chatIds = chatRepository
@@ -40,7 +40,7 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
                 .toList();
 
             try {
-                botWebClient.sendUpdate(new LinkUpdateRequest(
+                botWebClient.retrySendUpdate(new LinkUpdateRequest(
                     link.getId(),
                     link.getUrl(),
                     getDescription(stackOverflowResponse),
@@ -77,7 +77,7 @@ public class StackOverflowLinkUpdater implements LinkUpdater {
         long number = Long.parseLong(args[args.length - 1]);
 
         Response stackOverflowResponse =
-            stackOverflowRegularWebClient.fetchLatestModified(number);
+            stackOverflowRegularWebClient.retryFetchLatestModified(number);
 
         linkRepository.setLastUpdate(link.getUrl(), stackOverflowResponse.lastActivityDate());
     }

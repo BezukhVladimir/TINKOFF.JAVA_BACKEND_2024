@@ -3,9 +3,16 @@ package edu.java.scrapper.clients.stackoverflow;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.java.scrapper.configurations.RetryPolicyConfig;
 import edu.java.scrapper.dto.stackoverflow.Response;
+import edu.java.scrapper.models.RetryPolicy;
+import edu.java.scrapper.models.RetryPolicySettings;
+import io.github.resilience4j.retry.Retry;
+import jakarta.annotation.PostConstruct;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -15,6 +22,14 @@ public class RegularWebClient implements Client {
     @Value("${api.stackoverflow.baseUrl}")
     private String baseUrl;
     private final WebClient webClient;
+
+    private Retry retry4j;
+    @Value(value = "${api.bot.stackoverflow.retryPolicy}")
+    private RetryPolicy policy;
+    @Value(value = "${api.bot.stackoverflow.retryCount}")
+    private int count;
+    @Value("#{'${api.bot.stackoverflow.codes}'.split(',')}")
+    private Set<HttpStatus> statuses;
 
     public RegularWebClient() {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
@@ -32,6 +47,16 @@ public class RegularWebClient implements Client {
             .baseUrl(finalBaseUrl)
             .filter(logRequest())
             .build();
+    }
+
+    @PostConstruct
+    private void configRetry() {
+        RetryPolicySettings retryPolicySettings = new RetryPolicySettings()
+            .setPolicy(policy)
+            .setCount(count)
+            .setStatuses(statuses);
+
+        retry4j = RetryPolicyConfig.config(retryPolicySettings);
     }
 
     private static ExchangeFilterFunction logRequest() {
@@ -59,6 +84,11 @@ public class RegularWebClient implements Client {
             .bodyToMono(String.class)
             .mapNotNull(this::parse)
             .block();
+    }
+
+    @Override
+    public Response retryFetchLatestModified(Long questionNumber) {
+        return Retry.decorateSupplier(retry4j, () -> fetchLatestModified(questionNumber)).get();
     }
 
     private Response parse(String json) {

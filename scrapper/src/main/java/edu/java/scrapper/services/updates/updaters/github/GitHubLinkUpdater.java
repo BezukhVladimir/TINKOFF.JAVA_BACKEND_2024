@@ -27,8 +27,8 @@ public class GitHubLinkUpdater implements LinkUpdater {
     public int process(Link link) {
         String[] args = processLink(link.getUrl());
 
-        Response gitHubResponse = gitHubRegularWebClient
-            .fetchLatestModified(args[0], args[1]);
+        Response gitHubResponse =
+            gitHubRegularWebClient.retryFetchLatestModified(args[0], args[1]);
 
         if (gitHubResponse.createdAt().isAfter(link.getLastUpdate())) {
             List<Long> chatIds = chatRepository
@@ -38,7 +38,7 @@ public class GitHubLinkUpdater implements LinkUpdater {
                 .toList();
 
             try {
-                botWebClient.sendUpdate(new LinkUpdateRequest(
+                botWebClient.retrySendUpdate(new LinkUpdateRequest(
                     link.getId(),
                     link.getUrl(),
                     getDescription(gitHubResponse),
@@ -79,7 +79,7 @@ public class GitHubLinkUpdater implements LinkUpdater {
         String[] args = processLink(link.getUrl());
 
         Response gitHubResponse =
-            gitHubRegularWebClient.fetchLatestModified(args[0], args[1]);
+            gitHubRegularWebClient.retryFetchLatestModified(args[0], args[1]);
 
         linkRepository.setLastUpdate(link.getUrl(), gitHubResponse.createdAt());
     }

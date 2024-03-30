@@ -46,7 +46,7 @@ public class UserService {
 
         if (initiator.isEmpty()) {
             // TODO дублирование сущностей
-            scrapperWebClient.registerChat(chatId);
+            scrapperWebClient.retryRegisterChat(chatId);
             addUser(new User(chatId, List.of(), SessionState.DEFAULT));
 
             return true;
@@ -95,7 +95,7 @@ public class UserService {
         // TODO дублирование сущностей
         links.add(url);
         updateLinks(user, links);
-        scrapperWebClient.addLink(user.getChatId(), new AddLinkRequest(url));
+        scrapperWebClient.retryAddLink(user.getChatId(), new AddLinkRequest(url));
 
         return true;
     }
@@ -118,7 +118,7 @@ public class UserService {
         // TODO дублирование сущностей
         links.remove(url);
         updateLinks(user, links);
-        scrapperWebClient.removeLink(user.getChatId(), new RemoveLinkRequest(url));
+        scrapperWebClient.retryRemoveLink(user.getChatId(), new RemoveLinkRequest(url));
 
         return true;
     }
