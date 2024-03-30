@@ -37,9 +37,9 @@ public class RetryPolicyConfig {
         return RetryConfig.<WebClientResponseException>custom()
             .maxAttempts(settings.getCount())
             .intervalFunction(IntervalFunction.of(
-                    Duration.ZERO,
-                    attempt -> attempt * INTERVAL
-                ))
+                Duration.ofSeconds(INTERVAL),
+                attempt -> INTERVAL + attempt * INTERVAL
+            ))
             .retryOnResult(response -> settings.getStatuses().contains(response.getStatusCode()))
             .build();
     }

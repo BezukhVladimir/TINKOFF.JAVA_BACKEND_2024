@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ClientConfig {
-
     @Value(value = "${api.scrapper.baseUrl}")
     public String scrapperBaseUrl;
 

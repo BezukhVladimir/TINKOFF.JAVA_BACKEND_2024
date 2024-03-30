@@ -32,4 +32,6 @@ public class TooManyRequests429Filter extends OncePerRequestFilter {
             response.setStatus(429);
         }
     }
+
+    private static final int STATUS_CODE = 429;
 }
