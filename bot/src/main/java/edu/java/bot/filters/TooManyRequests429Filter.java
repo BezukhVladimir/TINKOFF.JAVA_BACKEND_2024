@@ -29,7 +29,7 @@ public class TooManyRequests429Filter extends OncePerRequestFilter {
         if (probe.isConsumed()) {
             filterChain.doFilter(request, response);
         } else {
-            response.setStatus(429);
+            response.setStatus(STATUS_CODE);
         }
     }
 

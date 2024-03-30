@@ -24,11 +24,11 @@ public class RegularWebClient implements Client {
     private final WebClient webClient;
 
     private Retry retry4j;
-    @Value(value = "${api.bot.stackoverflow.retryPolicy}")
+    @Value(value = "${api.stackoverflow.retryPolicy}")
     private RetryPolicy policy;
-    @Value(value = "${api.bot.stackoverflow.retryCount}")
+    @Value(value = "${api.stackoverflow.retryCount}")
     private int count;
-    @Value("#{'${api.bot.stackoverflow.codes}'.split(',')}")
+    @Value("#{'${api.stackoverflow.codes}'.split(',')}")
     private Set<HttpStatus> statuses;
 
     public RegularWebClient() {

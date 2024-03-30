@@ -25,11 +25,11 @@ public class RegularWebClient implements Client {
     private final WebClient webClient;
 
     private Retry retry4j;
-    @Value(value = "${api.bot.github.retryPolicy}")
+    @Value(value = "${api.github.retryPolicy}")
     private RetryPolicy policy;
-    @Value(value = "${api.bot.github.retryCount}")
+    @Value(value = "${api.github.retryCount}")
     private int count;
-    @Value("#{'${api.bot.github.codes}'.split(',')}")
+    @Value("#{'${api.github.codes}'.split(',')}")
     private Set<HttpStatus> statuses;
 
     public RegularWebClient() {

@@ -5,5 +5,6 @@ import edu.java.scrapper.dto.github.Response;
 
 public interface Client {
     Response fetchLatestModified(String repositoryName, String authorName);
+
     Response retryFetchLatestModified(String repositoryName, String authorName);
 }
