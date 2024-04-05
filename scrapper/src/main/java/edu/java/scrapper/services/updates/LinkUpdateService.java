@@ -11,7 +11,7 @@ import static edu.java.scrapper.utils.LinkUtils.extractDomainFromUrl;
 @Service
 @RequiredArgsConstructor
 public class LinkUpdateService {
-    private final static int UPDATES = 3;
+    private static final int UPDATES = 3;
 
     private final LinkRepository linkRepository;
     private final LinkHolder linkHolder;

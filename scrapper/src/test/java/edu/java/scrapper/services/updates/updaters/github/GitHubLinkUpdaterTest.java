@@ -40,7 +40,7 @@ class GitHubLinkUpdaterTest {
 
         Link link = new Link().setId(chatId).setUrl(url).setLastUpdate(OffsetDateTime.MIN);
 
-        when(gitHubRegularWebClient.fetchLatestModified("author", "repo"))
+        when(gitHubRegularWebClient.retryFetchLatestModified("author", "repo"))
             .thenReturn(new Response(chatId, "1", null, null, OffsetDateTime.MAX));
         when(jdbcChatRepository.findAllChatsByUrl(link.getUrl()))
             .thenReturn(List.of(new Chat().setId(chatId).setCreatedAt(OffsetDateTime.MIN)));
@@ -60,7 +60,7 @@ class GitHubLinkUpdaterTest {
 
         Link link = new Link().setId(chatId).setUrl(url).setLastUpdate(OffsetDateTime.MAX);
 
-        when(gitHubRegularWebClient.fetchLatestModified("author", "repo"))
+        when(gitHubRegularWebClient.retryFetchLatestModified("author", "repo"))
             .thenReturn(new Response(chatId, "1", null, null, OffsetDateTime.MIN));
 
         // Act
