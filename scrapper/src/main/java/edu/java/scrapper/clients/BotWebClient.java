@@ -23,7 +23,7 @@ public class BotWebClient {
     private RetryPolicy policy;
     @Value(value = "${api.bot.retryCount}")
     private int count;
-    @Value("#{'${api.bot.codes}'.split(',')}")
+    @Value("${api.bot.codes}")
     private Set<HttpStatus> statuses;
 
     public BotWebClient(String baseUrl) {

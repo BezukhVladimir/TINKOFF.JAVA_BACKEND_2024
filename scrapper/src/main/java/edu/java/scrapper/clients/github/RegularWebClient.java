@@ -29,7 +29,7 @@ public class RegularWebClient implements Client {
     private RetryPolicy policy;
     @Value(value = "${api.github.retryCount}")
     private int count;
-    @Value("#{'${api.github.codes}'.split(',')}")
+    @Value("${api.github.codes}")
     private Set<HttpStatus> statuses;
 
     public RegularWebClient() {

@@ -28,7 +28,7 @@ public class ScrapperWebClient {
     private RetryPolicy policy;
     @Value(value = "${api.scrapper.retryCount}")
     private int count;
-    @Value("#{'${api.scrapper.codes}'.split(',')}")
+    @Value("${api.scrapper.codes}")
     private Set<HttpStatus> statuses;
 
     public ScrapperWebClient(String baseUrl) {

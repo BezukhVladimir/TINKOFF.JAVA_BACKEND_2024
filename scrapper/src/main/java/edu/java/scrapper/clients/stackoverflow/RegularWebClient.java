@@ -28,7 +28,7 @@ public class RegularWebClient implements Client {
     private RetryPolicy policy;
     @Value(value = "${api.stackoverflow.retryCount}")
     private int count;
-    @Value("#{'${api.stackoverflow.codes}'.split(',')}")
+    @Value("${api.stackoverflow.codes}")
     private Set<HttpStatus> statuses;
 
     public RegularWebClient() {
