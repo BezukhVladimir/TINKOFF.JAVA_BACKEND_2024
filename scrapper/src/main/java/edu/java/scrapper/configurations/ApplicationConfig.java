@@ -15,7 +15,11 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     @NotNull
-    String databaseAccessType
+    String databaseAccessType,
+    @NotNull
+    Boolean useQueue,
+    @NotNull
+    Kafka kafka
 ) {
     @Bean
     public DefaultConfigurationCustomizer configurationCustomizer() {
@@ -31,5 +35,13 @@ public record ApplicationConfig(
         @NotNull Duration forceCheckDelay,
         @NotNull Duration removeUnusedLinksInterval
     ) {
+    }
+
+    public record Kafka(
+        String bootstrapServers,
+        Producer producer,
+        String topicName
+    ) {
+        public record Producer(String keySerializer, String valueSerializer) {}
     }
 }
