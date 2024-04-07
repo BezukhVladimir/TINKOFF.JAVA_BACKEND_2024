@@ -1,7 +1,7 @@
 package edu.java.bot.api.controllers;
 
 import edu.java.bot.api.models.requests.LinkUpdateRequest;
-import edu.java.bot.listeners.BotUpdatesListener;
+import edu.java.bot.services.UpdatesListenersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,14 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/updates")
 @RequiredArgsConstructor
 public class UpdatesController {
-    private final BotUpdatesListener botUpdatesListener;
+    private final UpdatesListenersService updatesListenersService;
 
     @PostMapping
     public String processUpdate(@RequestBody @Valid LinkUpdateRequest linkUpdateRequest) {
-        for (Long chat : linkUpdateRequest.tgChatIds()) {
-            botUpdatesListener.sendMessage(String.valueOf(chat), linkUpdateRequest.description());
-        }
-
+        updatesListenersService.process(linkUpdateRequest);
         return "Обновление обработано";
     }
 }
