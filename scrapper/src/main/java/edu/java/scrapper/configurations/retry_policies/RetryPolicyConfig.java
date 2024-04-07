@@ -1,6 +1,5 @@
-package edu.java.bot.configurations;
+package edu.java.scrapper.configurations.retry_policies;
 
-import edu.java.bot.models.RetryPolicySettings;
 import io.github.resilience4j.core.IntervalFunction;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
@@ -22,7 +21,7 @@ public class RetryPolicyConfig {
             case EXPONENTIAL -> exponential(settings);
         };
 
-        return Retry.of("bot-retry-" + OffsetDateTime.now(), config);
+        return Retry.of("scrapper-retry-" + OffsetDateTime.now(), config);
     }
 
     private static RetryConfig constant(RetryPolicySettings settings) {
@@ -37,9 +36,9 @@ public class RetryPolicyConfig {
         return RetryConfig.<WebClientResponseException>custom()
             .maxAttempts(settings.getCount())
             .intervalFunction(IntervalFunction.of(
-                    Duration.ofSeconds(INTERVAL),
-                    attempt -> INTERVAL + attempt * INTERVAL
-                ))
+                Duration.ofSeconds(INTERVAL),
+                attempt -> INTERVAL + attempt * INTERVAL
+            ))
             .retryOnResult(response -> settings.getStatuses().contains(response.getStatusCode()))
             .build();
     }

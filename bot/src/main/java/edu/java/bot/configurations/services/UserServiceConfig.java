@@ -1,4 +1,4 @@
-package edu.java.bot.configurations;
+package edu.java.bot.configurations.services;
 
 import edu.java.bot.clients.ScrapperWebClient;
 import edu.java.bot.services.UserService;

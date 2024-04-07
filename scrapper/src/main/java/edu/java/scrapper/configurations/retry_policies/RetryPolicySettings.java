@@ -1,4 +1,4 @@
-package edu.java.scrapper.models;
+package edu.java.scrapper.configurations.retry_policies;
 
 import java.util.Set;
 import lombok.Data;

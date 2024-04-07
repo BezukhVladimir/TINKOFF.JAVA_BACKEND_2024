@@ -1,13 +1,13 @@
 package edu.java.scrapper.services.updates.updaters.github;
 
 import edu.java.scrapper.api.models.request.LinkUpdateRequest;
-import edu.java.scrapper.clients.BotWebClient;
 import edu.java.scrapper.clients.github.Client;
 import edu.java.scrapper.dto.github.Response;
 import edu.java.scrapper.models.Chat;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repositories.ChatRepository;
 import edu.java.scrapper.repositories.LinkRepository;
+import edu.java.scrapper.services.updates.NotificationService;
 import edu.java.scrapper.services.updates.updaters.LinkUpdater;
 import java.net.URI;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GitHubLinkUpdater implements LinkUpdater {
-    private final BotWebClient botWebClient;
+    private final NotificationService notificationService;
     private final Client gitHubRegularWebClient;
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
@@ -38,7 +38,7 @@ public class GitHubLinkUpdater implements LinkUpdater {
                 .toList();
 
             try {
-                botWebClient.retrySendUpdate(new LinkUpdateRequest(
+                notificationService.sendUpdate(new LinkUpdateRequest(
                     link.getId(),
                     link.getUrl(),
                     getDescription(gitHubResponse),

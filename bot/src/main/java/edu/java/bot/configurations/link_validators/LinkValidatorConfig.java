@@ -1,4 +1,4 @@
-package edu.java.bot.configurations;
+package edu.java.bot.configurations.link_validators;
 
 import edu.java.bot.link_validators.GitHubLinkValidator;
 import edu.java.bot.link_validators.LinkValidator;

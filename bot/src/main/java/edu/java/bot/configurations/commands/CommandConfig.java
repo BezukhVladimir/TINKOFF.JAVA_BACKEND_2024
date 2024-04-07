@@ -1,4 +1,4 @@
-package edu.java.bot.configurations;
+package edu.java.bot.configurations.commands;
 
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.HelpCommand;

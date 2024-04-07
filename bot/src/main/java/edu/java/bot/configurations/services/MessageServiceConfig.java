@@ -1,4 +1,4 @@
-package edu.java.bot.configurations;
+package edu.java.bot.configurations.services;
 
 import edu.java.bot.handlers.CommandHandler;
 import edu.java.bot.link_validators.LinkValidator;

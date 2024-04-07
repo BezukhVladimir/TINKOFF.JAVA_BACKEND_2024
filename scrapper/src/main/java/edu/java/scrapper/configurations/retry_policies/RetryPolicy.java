@@ -1,4 +1,4 @@
-package edu.java.bot.models;
+package edu.java.scrapper.configurations.retry_policies;
 
 public enum RetryPolicy {
     CONSTANT,

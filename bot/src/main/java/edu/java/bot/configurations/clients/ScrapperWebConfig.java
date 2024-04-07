@@ -1,4 +1,4 @@
-package edu.java.bot.configurations;
+package edu.java.bot.configurations.clients;
 
 import edu.java.bot.clients.ScrapperWebClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class ClientConfig {
+public class ScrapperWebConfig {
     @Value(value = "${api.scrapper.baseUrl}")
     public String scrapperBaseUrl;
 

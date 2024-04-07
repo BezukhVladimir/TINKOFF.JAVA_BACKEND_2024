@@ -1,6 +1,7 @@
-package edu.java.bot.configurations;
+package edu.java.bot.configurations.listeners;
 
 import com.pengrad.telegrambot.TelegramBot;
+import edu.java.bot.configurations.ApplicationConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
