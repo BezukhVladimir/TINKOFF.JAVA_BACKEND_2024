@@ -5,6 +5,13 @@ app:
     removeUnusedLinksInterval: 86400
     force-check-delay: 10000
   database-access-type: jpa
+  useQueue: true
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    topicName: botUpdates
 
 spring:
   application:
@@ -36,32 +43,17 @@ api:
     baseUrl: http://localhost:8090
     retryPolicy: linear
     retryCount: 3
-    codes:
-    - INTERNAL_SERVER_ERROR
-    - BAD_GATEWAY
-    - INSUFFICIENT_STORAGE
-    - SERVICE_UNAVAILABLE
-    - GATEWAY_TIMEOUT
+    codes: INTERNAL_SERVER_ERROR, BAD_GATEWAY, INSUFFICIENT_STORAGE, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
   github:
     baseUrl: https://api.github.com/
     retryPolicy: linear
     retryCount: 3
-    codes:
-      - INTERNAL_SERVER_ERROR
-      - BAD_GATEWAY
-      - INSUFFICIENT_STORAGE
-      - SERVICE_UNAVAILABLE
-      - GATEWAY_TIMEOUT
+    codes: INTERNAL_SERVER_ERROR, BAD_GATEWAY, INSUFFICIENT_STORAGE, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
   stackoverflow:
     baseUrl: https://api.stackexchange.com/2.3/
     retryPolicy: linear
     retryCount: 3
-    codes:
-      - INTERNAL_SERVER_ERROR
-      - BAD_GATEWAY
-      - INSUFFICIENT_STORAGE
-      - SERVICE_UNAVAILABLE
-      - GATEWAY_TIMEOUT
+    codes: INTERNAL_SERVER_ERROR, BAD_GATEWAY, INSUFFICIENT_STORAGE, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
 
 springdoc:
   swagger-ui:

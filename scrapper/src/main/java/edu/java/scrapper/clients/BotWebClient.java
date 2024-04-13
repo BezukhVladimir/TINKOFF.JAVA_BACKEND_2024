@@ -2,10 +2,10 @@ package edu.java.scrapper.clients;
 
 import edu.java.scrapper.api.models.request.LinkUpdateRequest;
 import edu.java.scrapper.api.models.response.ApiErrorResponse;
-import edu.java.scrapper.configurations.RetryPolicyConfig;
+import edu.java.scrapper.configurations.retry_policies.RetryPolicy;
+import edu.java.scrapper.configurations.retry_policies.RetryPolicyConfig;
+import edu.java.scrapper.configurations.retry_policies.RetryPolicySettings;
 import edu.java.scrapper.exceptions.ApiErrorException;
-import edu.java.scrapper.models.RetryPolicy;
-import edu.java.scrapper.models.RetryPolicySettings;
 import io.github.resilience4j.retry.Retry;
 import jakarta.annotation.PostConstruct;
 import java.util.Set;

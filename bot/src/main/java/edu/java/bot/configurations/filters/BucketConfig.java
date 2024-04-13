@@ -1,4 +1,4 @@
-package edu.java.scrapper.configurations;
+package edu.java.bot.configurations.filters;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;

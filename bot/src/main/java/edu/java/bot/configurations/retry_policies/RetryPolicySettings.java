@@ -1,4 +1,4 @@
-package edu.java.bot.models;
+package edu.java.bot.configurations.retry_policies;
 
 import java.util.Set;
 import lombok.Data;

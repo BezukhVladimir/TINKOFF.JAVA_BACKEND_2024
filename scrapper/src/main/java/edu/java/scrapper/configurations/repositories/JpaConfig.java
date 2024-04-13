@@ -1,4 +1,4 @@
-package edu.java.scrapper.configurations;
+package edu.java.scrapper.configurations.repositories;
 
 import edu.java.scrapper.repositories.ChatRepository;
 import edu.java.scrapper.repositories.LinkRepository;
