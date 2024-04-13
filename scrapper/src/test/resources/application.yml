@@ -24,6 +24,7 @@ spring:
     password: postgres
     driverClassName: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     show-sql: true
