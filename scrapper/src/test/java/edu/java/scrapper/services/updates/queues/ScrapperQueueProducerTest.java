@@ -2,14 +2,14 @@ package edu.java.scrapper.services.updates.queues;
 
 import edu.java.scrapper.api.models.request.LinkUpdateRequest;
 import edu.java.scrapper.configurations.ApplicationConfig;
+import java.net.URI;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
-import java.net.URI;
-import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
